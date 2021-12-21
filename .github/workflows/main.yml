@@ -10,6 +10,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install dependencies
+        run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
+
       # get part of the tag after the `v`
       - name: Extract tag version number
         id: get_version
@@ -28,7 +37,6 @@ jobs:
           download: https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/module.zip
 
       # Create a zip file with all files required by the module to add to the release
-      - run: npm run build
       - run: zip -r ./module.zip module.json LICENSE styles/ scripts/ templates/ languages/
 
       # Create a release for this specific version
