@@ -12,7 +12,6 @@
     }
   ],
   "minimumCoreVersion": "0.8.9",
-  "compatibleCoreVersion": "0.8.9",
   "esmodules": ["module/sheet-skill-actions.js"],
   "url": "",
   "manifest": "",
