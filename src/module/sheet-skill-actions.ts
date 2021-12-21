@@ -13,6 +13,7 @@
 // Import TypeScript modules
 import { registerSettings } from './settings';
 import { preloadTemplates } from './preloadTemplates';
+import SkillAction from './skill-actions';
 
 // Initialize module
 Hooks.once('init', async () => {
@@ -41,3 +42,25 @@ Hooks.once('ready', async () => {
 });
 
 // Add any additional hooks if necessary
+Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) => {
+  const skillActions: Array<SkillAction> = initializeSkillActions(app.actor).sort((a, b) => {
+    return a.label > b.label ? 1 : -1;
+  });
+  console.log(app.actor);
+  const tpl = 'modules/sheet-skill-actions/templates/skill-actions.html';
+  const skillActionHtml = await renderTemplate(tpl, { skills: skillActions });
+  const target = $(html).find('.actions-list.item-list.inventory-list.directory-list.strikes-list');
+  target.after($(skillActionHtml));
+});
+
+function initializeSkillActions(actor: Actor): Array<SkillAction> {
+  return [
+    new SkillAction('disarm', 'Disarm', 'ath', true, 'perfect-strike', false, actor),
+    new SkillAction('grapple', 'Grapple', 'ath', false, 'remove-fear', false, actor),
+    new SkillAction('trip', 'Trip', 'ath', false, 'natures-enmity', false, actor),
+    new SkillAction('demoralize', 'Demoralize', 'itm', false, 'blind-ambition', false, actor),
+    new SkillAction('shove', 'Shove', 'ath', false, 'ki-strike', false, actor),
+    new SkillAction('feint', 'Feint', 'dec', true, 'delay-consequence', false, actor),
+    new SkillAction('bonMot', 'Bon Mot', 'acr', false, 'hideous-laughter', true, actor),
+  ];
+}

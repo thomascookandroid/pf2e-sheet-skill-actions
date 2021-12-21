@@ -1,38 +1,27 @@
 {
   "name": "sheet-skill-actions",
-  "title": "sheet-skill-actions",
-  "description": "",
-  "version": "0.0.0",
-  "author": "<your name>",
+  "title": "PF2e Character Sheet Skill Actions",
+  "description": "It puts the skill actions on the sheet or it gets the hose again",
+  "version": "0.1.0",
+  "author": "Jim Daily",
   "authors": [
     {
-      "name": "<your name>",
-      "email": "<optionally your e-mail address>",
-      "discord": "<optionally your discord username>"
+      "name": "Jim Daily",
+      "email": "Jaypeedaylee@gmail.com",
+      "discord": "Flash Granola#3086"
     }
   ],
-  "minimumCoreVersion": "0.8.8",
-  "compatibleCoreVersion": "0.8.8",
-  "scripts": [],
+  "minimumCoreVersion": "0.8.9",
+  "compatibleCoreVersion": "0.8.9",
   "esmodules": ["module/sheet-skill-actions.js"],
-  "styles": ["styles/sheet-skill-actions.css"],
-  "packs": [],
-  "dependencies": [],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json"
-    }
-  ],
-  "socket": false,
   "url": "",
   "manifest": "",
-  "download": "https://host/path/to/0.0.0.zip",
-  "license": "",
-  "readme": "",
-  "bugs": "",
-  "changelog": "",
-  "system": [],
-  "library": false
+  "download": "https://host/path/to/0.1.0.zip",
+  "system": ["pf2e"],
+  "media": [
+    {
+      "type": "icon",
+      "url": "https://avatars2.githubusercontent.com/u/71292812?s=400&u=ccdb4eeb7abf551ca8f314e5a9bfd0479a4d3d41&v=4"
+    }
+  ]
 }

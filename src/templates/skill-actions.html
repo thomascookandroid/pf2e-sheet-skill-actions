@@ -1,0 +1,26 @@
+<ol class="actions-list item-list inventory-list directory-list skill-action-list">
+  <li class="action-header">
+    <h3 class="pf-heading pf-actions">Skill Actions</h3>
+  </li>
+  {{#each skills}} {{#if hidden}}
+  <li class="item expandable ready" draggable="true">
+    <div class="item-name">
+      <div class="item-image variant-strike" style="background-image: url({{icon}})"></div>
+      <div class="actions-title">
+        <div class="action-name">
+          <h4>{{label}} <span class="activity-icon">A</span></h4>
+        </div>
+        <div class="button-group tags">
+          <button id="{{key}}" type="button" class="skill-action tag variant-strike">Roll {{modifier}}</button>
+        </div>
+      </div>
+    </div>
+  </li>
+  {{/if}} {{/each}}
+</ol>
+
+<script>
+  $('.skill-action.tag.variant-strike').click(function () {
+    game.pf2e.actions[this.id]({ event: event });
+  });
+</script>
