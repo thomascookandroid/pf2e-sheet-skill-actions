@@ -46,7 +46,6 @@ Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) 
   const skillActions: Array<SkillAction> = initializeSkillActions(app.actor).sort((a, b) => {
     return a.label > b.label ? 1 : -1;
   });
-  console.log(app.actor);
   const tpl = 'modules/sheet-skill-actions/templates/skill-actions.html';
   const skillActionHtml = await renderTemplate(tpl, { skills: skillActions });
   const target = $(html).find('.actions-list.item-list.inventory-list.directory-list.strikes-list');
