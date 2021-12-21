@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: ${{ env.node_version }}
 
+      - name: Install dependancies
+        run: npm ci --cache .npm --prefer-offline
+
       - name: Cache Node.js modules
         uses: actions/cache@v2
         with:
