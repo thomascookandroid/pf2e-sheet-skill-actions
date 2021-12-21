@@ -17,7 +17,7 @@ const distDirectory = './dist';
 const stylesDirectory = `${sourceDirectory}/styles`;
 const stylesExtension = 'scss';
 const sourceFileExtension = 'ts';
-const staticFiles = ['assets', 'fonts', 'lang', 'packs', 'templates', 'module.json'];
+const staticFiles = ['templates', 'module.json'];
 const getDownloadURL = (version) => `https://host/path/to/${version}.zip`;
 
 /********************/
