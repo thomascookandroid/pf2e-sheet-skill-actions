@@ -211,7 +211,7 @@ function bumpVersion(cb) {
   }
 }
 
-const execBuild = gulp.parallel(buildCode, buildStyles, copyFiles);
+const execBuild = gulp.parallel(buildCode, copyFiles);
 
 exports.build = gulp.series(clean, execBuild);
 exports.watch = buildWatch;
