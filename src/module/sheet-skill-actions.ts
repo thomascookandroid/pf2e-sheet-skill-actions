@@ -39,7 +39,6 @@ Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) 
   const skillActionHtml = await renderTemplate(tpl, { skills: skillActions });
   const target = $(html).find('.actions-list.item-list.directory-list.strikes-list');
   target.after(skillActionHtml);
-  console.log(target);
 });
 
 function initializeSkillActions(actor: Actor): Array<SkillAction> {
