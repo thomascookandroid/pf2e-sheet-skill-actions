@@ -30,26 +30,16 @@ Hooks.once('init', async () => {
   // Register custom sheets (if any)
 });
 
-// Setup module
-Hooks.once('setup', async () => {
-  // Do anything after initialization but before
-  // ready
-});
-
-// When ready
-Hooks.once('ready', async () => {
-  // Do anything once the module is ready
-});
-
 // Add any additional hooks if necessary
 Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) => {
   const skillActions: Array<SkillAction> = initializeSkillActions(app.actor).sort((a, b) => {
     return a.label > b.label ? 1 : -1;
   });
-  const tpl = 'modules/sheet-skill-actions/templates/skill-actions.html';
+  const tpl = 'modules/pf2e-sheet-skill-actions/templates/skill-actions.html';
   const skillActionHtml = await renderTemplate(tpl, { skills: skillActions });
-  const target = $(html).find('.actions-list.item-list.inventory-list.directory-list.strikes-list');
-  target.after($(skillActionHtml));
+  const target = $(html).find('.actions-list.item-list.directory-list.strikes-list');
+  target.after(skillActionHtml);
+  console.log(target);
 });
 
 function initializeSkillActions(actor: Actor): Array<SkillAction> {

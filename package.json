@@ -9,13 +9,10 @@
     "type": "git",
     "url": ""
   },
-  "bugs": {
-    "url": ""
-  },
   "contributors": [
     {
-      "name": "",
-      "email": ""
+      "name": "Jim Daily",
+      "email": "jaypeedaylee@gmail.com"
     }
   ],
   "scripts": {
