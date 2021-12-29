@@ -2,7 +2,9 @@
 
 This will add a number of skill actions to your stikes list to be more easily accessible to the player.  
 
-The module will hide any skill actions that you're currently not trained in.  Actions that require feats will not show up unless you actually have the feat.
+The module will hide any skill actions that you're currently not trained in.  
+
+Actions that require a feat (ex: Bon Mot) will not show up unless you actually have the feat.
 
 MAP rolls are in the plan, however the system doesn't currently support the capability.  Once that's in, the module will be updated accordingly.
 
