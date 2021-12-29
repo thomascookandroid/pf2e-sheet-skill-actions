@@ -26,17 +26,19 @@ Hooks.once('init', async () => {
 
   // Preload Handlebars templates
   await preloadTemplates();
-
-  // Register custom sheets (if any)
 });
 
 // Add any additional hooks if necessary
 Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) => {
+  if (app.actor.type !== 'character') return;
+
+  const tpl = 'modules/pf2e-sheet-skill-actions/templates/skill-actions.html';
+
   const skillActions: Array<SkillAction> = initializeSkillActions(app.actor).sort((a, b) => {
     return a.label > b.label ? 1 : -1;
   });
-  const tpl = 'modules/pf2e-sheet-skill-actions/templates/skill-actions.html';
   const skillActionHtml = await renderTemplate(tpl, { skills: skillActions });
+
   const target = $(html).find('.actions-list.item-list.directory-list.strikes-list');
   target.after(skillActionHtml);
 });
