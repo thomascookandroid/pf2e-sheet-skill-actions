@@ -51,6 +51,6 @@ function initializeSkillActions(actor: Actor): Array<SkillAction> {
     new SkillAction('demoralize', 'Demoralize', 'itm', false, 'blind-ambition', false, actor),
     new SkillAction('shove', 'Shove', 'ath', false, 'ki-strike', false, actor),
     new SkillAction('feint', 'Feint', 'dec', true, 'delay-consequence', false, actor),
-    new SkillAction('bonMot', 'Bon Mot', 'acr', false, 'hideous-laughter', true, actor),
+    new SkillAction('bonMot', 'Bon Mot', 'dip', false, 'hideous-laughter', true, actor),
   ];
 }
