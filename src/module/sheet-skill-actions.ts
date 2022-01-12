@@ -45,11 +45,11 @@ Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) 
 
 function initializeSkillActions(actor: Actor): Array<SkillAction> {
   return [
-    new SkillAction('disarm', 'Disarm', 'ath', true, 'perfect-strike', false, actor),
-    new SkillAction('grapple', 'Grapple', 'ath', false, 'remove-fear', false, actor),
-    new SkillAction('trip', 'Trip', 'ath', false, 'natures-enmity', false, actor),
+    new SkillAction('disarm', 'Disarm', 'ath', true, 'perfect-strike', false, actor, { includeMap: true }),
+    new SkillAction('grapple', 'Grapple', 'ath', false, 'remove-fear', false, actor, { includeMap: true }),
+    new SkillAction('trip', 'Trip', 'ath', false, 'natures-enmity', false, actor, { includeMap: true }),
     new SkillAction('demoralize', 'Demoralize', 'itm', false, 'blind-ambition', false, actor),
-    new SkillAction('shove', 'Shove', 'ath', false, 'ki-strike', false, actor),
+    new SkillAction('shove', 'Shove', 'ath', false, 'ki-strike', false, actor, { includeMap: true }),
     new SkillAction('feint', 'Feint', 'dec', true, 'delay-consequence', false, actor),
     new SkillAction('bonMot', 'Bon Mot', 'dip', false, 'hideous-laughter', true, actor),
   ];
