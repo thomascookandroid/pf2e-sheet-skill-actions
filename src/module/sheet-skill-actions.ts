@@ -14,6 +14,8 @@
 import { registerSettings } from './settings';
 import { preloadTemplates } from './preloadTemplates';
 import SkillAction from './skill-actions';
+import { ActionsIndex } from './actions-index';
+import { ItemConstructor } from './globals';
 
 // Initialize module
 Hooks.once('init', async () => {
@@ -28,6 +30,11 @@ Hooks.once('init', async () => {
   await preloadTemplates();
 });
 
+Hooks.once('ready', async () => {
+  await ActionsIndex.instance.loadCompendium('pf2e.feats-srd');
+  await ActionsIndex.instance.loadCompendium('pf2e.actionspf2e');
+});
+
 // Add any additional hooks if necessary
 Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) => {
   if (app.actor.type !== 'character') return;
@@ -37,7 +44,18 @@ Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) 
   const skillActions: Array<SkillAction> = initializeSkillActions(app.actor).sort((a, b) => {
     return a.label > b.label ? 1 : -1;
   });
-  const skillActionHtml = await renderTemplate(tpl, { skills: skillActions });
+  const skillActionHtml = $(await renderTemplate(tpl, { skills: skillActions }));
+
+  skillActionHtml.on('click', '.item-image', (e) => {
+    const itemLabel = e.currentTarget.dataset.itemLabel;
+    if (!itemLabel) return;
+
+    const actionItem = ActionsIndex.instance.get(itemLabel);
+    if (!actionItem) return;
+
+    const ownedItem = new (actionItem.constructor as ItemConstructor)(actionItem.toJSON(), { parent: app.actor });
+    ownedItem.toChat();
+  });
 
   const target = $(html).find('.actions-list.item-list.directory-list.strikes-list');
   target.after(skillActionHtml);

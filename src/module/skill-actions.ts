@@ -12,6 +12,7 @@ interface RollOption {
 
 export default class SkillAction {
   key: string;
+  itemName: string;
   label: string;
   icon: string;
   modifier: string;
@@ -32,6 +33,7 @@ export default class SkillAction {
     const skill = actor.data.data.skills[proficiencyKey];
 
     this.key = key;
+    this.itemName = label;
     this.actor = actor;
     this.label = game.i18n.localize(skill.label) + ': ' + label;
     this.modifier = (skill.value >= 0 ? ' +' : ' ') + skill.value;
