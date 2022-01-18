@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 
+import {ActionsIndex} from "./actions-index";
+
 interface SkillActionOptions {
   includeMap: boolean;
 }
@@ -48,11 +50,16 @@ export default class SkillAction {
     game.pf2e.actions[this.key]({ event: event });
   }
 
+  get actionItem() {
+    return ActionsIndex.instance.get(this.itemName);
+  }
+
   rollOptions(): Array<RollOption> {
     const result = [{ label: `Roll ${this.modifier}`, map: 0 }];
-    if (this.includeMap) {
-      result.push({ label: game.i18n.format('PF2E.MAPAbbreviationLabel', { penalty: -5 }), map: -5 });
-      result.push({ label: game.i18n.format('PF2E.MAPAbbreviationLabel', { penalty: -10 }), map: -10 });
+    if (this.actionItem.data.data.traits.value.includes('attack')) {
+      const map = this.actionItem.calculateMap();
+      result.push({ label: game.i18n.format('PF2E.MAPAbbreviationLabel', { penalty: map.map2 }), map: map.map2 });
+      result.push({ label: game.i18n.format('PF2E.MAPAbbreviationLabel', { penalty: map.map3 }), map: map.map3 });
     }
     return result;
   }
