@@ -16,6 +16,7 @@ import { preloadTemplates } from './preloadTemplates';
 import SkillAction from './skill-actions';
 import { ActionsIndex } from './actions-index';
 import { ItemConstructor } from './globals';
+import { ModifierPF2e } from './pf2e';
 
 // Initialize module
 Hooks.once('init', async () => {
@@ -46,7 +47,25 @@ Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) 
   });
   const skillActionHtml = $(await renderTemplate(tpl, { skills: skillActions }));
 
-  skillActionHtml.on('click', '.item-image', (e) => {
+  skillActionHtml.on('click', '.skill-action.tag.variant-strike', function (e) {
+    if (!(game instanceof Game)) return;
+
+    const modifiers = [];
+    const map = parseInt(this.dataset.map);
+
+    if (map) {
+      modifiers.push(
+        new ModifierPF2e({
+          label: game.i18n.localize('PF2E.MultipleAttackPenalty'),
+          modifier: map,
+          type: 'untyped',
+        }),
+      );
+    }
+    game.pf2e.actions[this.id]({ event: e, modifiers });
+  });
+
+  skillActionHtml.on('click', '.item-image', function (e) {
     const itemLabel = e.currentTarget.dataset.itemLabel;
     if (!itemLabel) return;
 
