@@ -22,13 +22,3 @@
   </li>
   {{/if}} {{/each}}
 </ol>
-
-<script>
-  $('.skill-action.tag.variant-strike').click(function () {
-    const modifiers = [];
-    if (this.dataset.map) {
-      modifiers.push({label: game.i18n.localize("PF2E.MultipleAttackPenalty"), modifier: parseInt(this.dataset.map), type: 'untyped'})
-    }
-    game.pf2e.actions[this.id]({ event: event, modifiers });
-  });
-</script>
