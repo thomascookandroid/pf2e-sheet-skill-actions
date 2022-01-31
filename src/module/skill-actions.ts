@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 
-import {ActionsIndex} from "./actions-index";
+import { ActionsIndex } from './actions-index';
+import { Flag } from './utils';
+import { ModifierPF2e } from './pf2e';
 
 interface SkillActionOptions {
   includeMap: boolean;
@@ -12,13 +14,17 @@ interface RollOption {
   map: number;
 }
 
+export interface ActorSkillAction {
+  visible: boolean;
+}
+
 export default class SkillAction {
   key: string;
   itemName: string;
   label: string;
   icon: string;
   modifier: string;
-  hidden: boolean;
+  enabled: boolean;
   includeMap: boolean;
   actor: Actor;
 
@@ -39,19 +45,46 @@ export default class SkillAction {
     this.actor = actor;
     this.label = game.i18n.localize(skill.label) + ': ' + label;
     this.modifier = (skill.value >= 0 ? ' +' : ' ') + skill.value;
-    this.hidden =
+    this.enabled =
       (skill._modifiers[1].modifier > 0 && trainingRequired) ||
       (!trainingRequired && this.hasFeat(label, featRequired));
     this.icon = 'systems/pf2e/icons/spells/' + icon + '.webp';
     this.includeMap = options.includeMap;
   }
 
-  rollSkillAction() {
-    game.pf2e.actions[this.key]({ event: event });
+  get visible() {
+    return this.actorData?.visible ?? true;
   }
 
   get actionItem() {
     return ActionsIndex.instance.get(this.itemName);
+  }
+
+  private get actorData(): ActorSkillAction | undefined {
+    return Flag.get(this.actor, `actions.${this.key}`);
+  }
+
+  async update(data: ActorSkillAction) {
+    await Flag.set(this.actor, `actions.${this.key}`, data);
+  }
+
+  rollSkillAction(e) {
+    if (!(game instanceof Game)) return;
+
+    const modifiers = [];
+    const map = parseInt(e.currentTarget.dataset.map);
+
+    if (map) {
+      modifiers.push(
+        new ModifierPF2e({
+          label: game.i18n.localize('PF2E.MultipleAttackPenalty'),
+          modifier: map,
+          type: 'untyped',
+        }),
+      );
+    }
+
+    game.pf2e.actions[this.key]({ event: e, modifiers });
   }
 
   rollOptions(): Array<RollOption> {

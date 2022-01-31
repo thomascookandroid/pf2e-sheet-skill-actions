@@ -17,6 +17,7 @@ import SkillAction from './skill-actions';
 import { ActionsIndex } from './actions-index';
 import { ItemConstructor } from './globals';
 import { ModifierPF2e } from './pf2e';
+import { actionFromEvent, Flag } from './utils';
 
 // Initialize module
 Hooks.once('init', async () => {
@@ -42,52 +43,60 @@ Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) 
 
   const tpl = 'modules/pf2e-sheet-skill-actions/templates/skill-actions.html';
 
-  const skillActions: Array<SkillAction> = initializeSkillActions(app.actor).sort((a, b) => {
-    return a.label > b.label ? 1 : -1;
+  const skillActions = initializeSkillActions(app.actor);
+
+  const allVisible = Flag.get(app.actor, 'allVisible');
+  const skillData = Object.values(skillActions)
+    .map((action) => {
+      return {
+        enabled: action.enabled && (action.visible || allVisible),
+        key: action.key,
+        icon: action.icon,
+        label: action.label,
+        visible: action.visible,
+        rollOptions: action.rollOptions(),
+      };
+    })
+    .sort((a, b) => {
+      return a.label > b.label ? 1 : -1;
+    });
+
+  const skillActionHtml = $(await renderTemplate(tpl, { skills: skillData, allVisible: allVisible }));
+  const $items = skillActionHtml.find('li.item');
+
+  skillActionHtml.on('click', '.toggle-hidden-actions', function () {
+    Flag.set(app.actor, 'allVisible', !Flag.get(app.actor, 'allVisible'));
   });
-  const skillActionHtml = $(await renderTemplate(tpl, { skills: skillActions }));
 
-  skillActionHtml.on('click', '.skill-action.tag.variant-strike', function (e) {
-    if (!(game instanceof Game)) return;
-
-    const modifiers = [];
-    const map = parseInt(this.dataset.map);
-
-    if (map) {
-      modifiers.push(
-        new ModifierPF2e({
-          label: game.i18n.localize('PF2E.MultipleAttackPenalty'),
-          modifier: map,
-          type: 'untyped',
-        }),
-      );
-    }
-    game.pf2e.actions[this.id]({ event: e, modifiers });
+  $items.on('click', '.skill-action.tag.variant-strike', function (e) {
+    actionFromEvent(skillActions, e).rollSkillAction(e);
   });
 
-  skillActionHtml.on('click', '.item-image', function (e) {
-    const itemLabel = e.currentTarget.dataset.itemLabel;
-    if (!itemLabel) return;
-
-    const actionItem = ActionsIndex.instance.get(itemLabel);
+  $items.on('click', '.item-image', function (e) {
+    const actionItem = actionFromEvent(skillActions, e).actionItem;
     if (!actionItem) return;
 
     const ownedItem = new (actionItem.constructor as ItemConstructor)(actionItem.toJSON(), { parent: app.actor });
     ownedItem.toChat();
   });
 
+  $items.on('click', '.item-toggle-equip', function (e) {
+    const action = actionFromEvent(skillActions, e);
+    action.update({ visible: !action.visible });
+  });
+
   const target = $(html).find('.actions-list.item-list.directory-list.strikes-list');
   target.after(skillActionHtml);
 });
 
-function initializeSkillActions(actor: Actor): Array<SkillAction> {
-  return [
-    new SkillAction('disarm', 'Disarm', 'ath', true, 'perfect-strike', false, actor, { includeMap: true }),
-    new SkillAction('grapple', 'Grapple', 'ath', false, 'remove-fear', false, actor, { includeMap: true }),
-    new SkillAction('trip', 'Trip', 'ath', false, 'natures-enmity', false, actor, { includeMap: true }),
-    new SkillAction('demoralize', 'Demoralize', 'itm', false, 'blind-ambition', false, actor),
-    new SkillAction('shove', 'Shove', 'ath', false, 'ki-strike', false, actor, { includeMap: true }),
-    new SkillAction('feint', 'Feint', 'dec', true, 'delay-consequence', false, actor),
-    new SkillAction('bonMot', 'Bon Mot', 'dip', false, 'hideous-laughter', true, actor),
-  ];
+function initializeSkillActions(actor: Actor): Record<string, SkillAction> {
+  return {
+    disarm: new SkillAction('disarm', 'Disarm', 'ath', true, 'perfect-strike', false, actor, { includeMap: true }),
+    grapple: new SkillAction('grapple', 'Grapple', 'ath', false, 'remove-fear', false, actor, { includeMap: true }),
+    trip: new SkillAction('trip', 'Trip', 'ath', false, 'natures-enmity', false, actor, { includeMap: true }),
+    demoralize: new SkillAction('demoralize', 'Demoralize', 'itm', false, 'blind-ambition', false, actor),
+    shove: new SkillAction('shove', 'Shove', 'ath', false, 'ki-strike', false, actor, { includeMap: true }),
+    feint: new SkillAction('feint', 'Feint', 'dec', true, 'delay-consequence', false, actor),
+    bonMot: new SkillAction('bonMot', 'Bon Mot', 'dip', false, 'hideous-laughter', true, actor),
+  };
 }
