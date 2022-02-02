@@ -4,10 +4,7 @@
 import { ActionsIndex } from './actions-index';
 import { Flag } from './utils';
 import { ModifierPF2e } from './pf2e';
-
-interface SkillActionOptions {
-  includeMap: boolean;
-}
+import { SKILL_ACTIONS_DATA } from './skill-actions-data';
 
 interface RollOption {
   label: string;
@@ -18,46 +15,57 @@ export interface ActorSkillAction {
   visible: boolean;
 }
 
-export default class SkillAction {
+export interface SkillActionData {
   key: string;
-  itemName: string;
   label: string;
   icon: string;
-  modifier: string;
-  enabled: boolean;
-  includeMap: boolean;
+  proficiencyKey: string;
+  trainingRequired: boolean;
+  featRequired: boolean;
   actor: Actor;
+}
 
-  constructor(
-    key: string,
-    label: string,
-    proficiencyKey: string,
-    trainingRequired: boolean,
-    icon: string,
-    featRequired: boolean,
-    actor: Actor,
-    options: SkillActionOptions = {},
-  ) {
-    const skill = actor.data.data.skills[proficiencyKey];
+export class SkillAction {
+  data: SkillActionData;
 
-    this.key = key;
-    this.itemName = label;
-    this.actor = actor;
-    this.label = game.i18n.localize(skill.label) + ': ' + label;
-    this.modifier = (skill.value >= 0 ? ' +' : ' ') + skill.value;
-    this.enabled =
-      (skill._modifiers[1].modifier > 0 && trainingRequired) ||
-      (!trainingRequired && this.hasFeat(label, featRequired));
-    this.icon = 'systems/pf2e/icons/spells/' + icon + '.webp';
-    this.includeMap = options.includeMap;
+  constructor(data: SkillActionData) {
+    data.icon = 'systems/pf2e/icons/spells/' + data.icon + '.webp';
+    this.data = data;
+  }
+
+  get actor() {
+    return this.data.actor;
+  }
+
+  get key() {
+    return this.data.key;
+  }
+
+  get skill() {
+    return this.actor.data.data.skills[this.data.proficiencyKey];
   }
 
   get visible() {
     return this.actorData?.visible ?? true;
   }
 
-  get actionItem() {
-    return ActionsIndex.instance.get(this.itemName);
+  get pf2eItem() {
+    return ActionsIndex.instance.get(this.data.label);
+  }
+
+  getData({ allVisible }: { allVisible: boolean }) {
+    const enabled =
+      (!this.data.trainingRequired || this.skill._modifiers[1].modifier > 0) &&
+      (!this.data.featRequired || this.hasFeat()) &&
+      (this.visible || allVisible);
+
+    return {
+      ...this.data,
+      enabled: enabled,
+      visible: this.visible,
+      label: game.i18n.localize(this.skill.label) + ': ' + this.data.label,
+      rollOptions: this.rollOptions(),
+    };
   }
 
   private get actorData(): ActorSkillAction | undefined {
@@ -88,18 +96,35 @@ export default class SkillAction {
   }
 
   rollOptions(): Array<RollOption> {
-    const result = [{ label: `Roll ${this.modifier}`, map: 0 }];
-    if (this.actionItem.data.data.traits.value.includes('attack')) {
-      const map = this.actionItem.calculateMap();
+    const modifier = (this.skill.value >= 0 ? ' +' : ' ') + this.skill.value;
+    const result = [{ label: `Roll ${modifier}`, map: 0 }];
+
+    if (this.pf2eItem.data.data.traits.value.includes('attack')) {
+      const map = this.pf2eItem.calculateMap();
       result.push({ label: game.i18n.format('PF2E.MAPAbbreviationLabel', { penalty: map.map2 }), map: map.map2 });
       result.push({ label: game.i18n.format('PF2E.MAPAbbreviationLabel', { penalty: map.map3 }), map: map.map3 });
     }
+
     return result;
   }
 
-  hasFeat(label: string, featRequired: boolean) {
+  private hasFeat() {
     const items = this.actor.data.items;
-    const result = items.filter((item) => item.data.name === label);
-    return (featRequired === true && result.length > 0) || featRequired === false;
+    const result = items.filter((item) => item.data.name === this.data.label);
+    return result.length > 0;
+  }
+}
+
+export class SkillActionCollection extends Collection<SkillAction> {
+  constructor(actor: Actor) {
+    super(
+      deepClone(SKILL_ACTIONS_DATA).map(function (row) {
+        return [row.key, new SkillAction({ ...row, actor: actor })];
+      }),
+    );
+  }
+
+  fromEvent(e: JQuery.TriggeredEvent) {
+    return this.get(e.delegateTarget.dataset.actionId, { strict: true });
   }
 }
