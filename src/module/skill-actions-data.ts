@@ -23,6 +23,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     translation: 'PF2E.Actions.Balance.Title',
     proficiencyKey: 'acr',
     trainingRequired: false,
+    icon: 'freedom-of-movement',
   },
   {
     key: 'tumbleThrough',
@@ -30,6 +31,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     translation: 'PF2E.Actions.TumbleThrough.Title',
     proficiencyKey: 'acr',
     trainingRequired: false,
+    icon: 'unimpeded-stride',
   },
   {
     key: 'maneuverInFlight',
@@ -37,6 +39,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     translation: 'PF2E.Actions.ManeuverInFlight.Title',
     proficiencyKey: 'acr',
     trainingRequired: true,
+    icon: 'fleet-step',
   },
   {
     key: 'climb',
@@ -44,6 +47,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     translation: 'PF2E.Actions.Climb.Title',
     proficiencyKey: 'ath',
     trainingRequired: false,
+    icon: 'heroic-feat',
   },
   {
     key: 'forceOpen',
@@ -51,6 +55,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     translation: 'PF2E.Actions.ForceOpen.Title',
     proficiencyKey: 'ath',
     trainingRequired: false,
+    icon: 'indestructibility',
   },
   {
     key: 'disarm',
@@ -75,6 +80,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     proficiencyKey: 'ath',
     trainingRequired: false,
     actionType: 'D',
+    icon: 'jump',
   },
   {
     key: 'longJump',
@@ -83,6 +89,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     proficiencyKey: 'ath',
     trainingRequired: false,
     actionType: 'D',
+    icon: 'longstrider',
   },
   {
     key: 'swim',
@@ -90,6 +97,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     translation: 'PF2E.Actions.Swim.Title',
     proficiencyKey: 'ath',
     trainingRequired: false,
+    icon: 'waters-of-prediction',
   },
   {
     key: 'trip',
@@ -129,6 +137,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     translation: 'PF2E.Actions.Request.Title',
     proficiencyKey: 'dip',
     trainingRequired: false,
+    icon: 'cackle',
   },
   {
     key: 'hide',
@@ -136,6 +145,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     translation: 'PF2E.Actions.Hide.Title',
     proficiencyKey: 'ste',
     trainingRequired: false,
+    icon: 'zealous-conviction',
   },
   {
     key: 'sneak',
@@ -143,6 +153,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     translation: 'PF2E.Actions.Sneak.Title',
     proficiencyKey: 'ste',
     trainingRequired: false,
+    icon: 'invisibility',
   },
   {
     key: 'pickALock',
@@ -151,6 +162,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     proficiencyKey: 'thi',
     trainingRequired: true,
     actionType: 'D',
+    icon: 'ward-domain',
   },
   {
     key: 'bonMot',
