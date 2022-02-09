@@ -4,7 +4,16 @@
 import { ActionsIndex } from './actions-index';
 import { Flag } from './utils';
 import { ModifierPF2e } from './pf2e';
-import { SKILL_ACTIONS_DATA } from './skill-actions-data';
+import { ActionType, SKILL_ACTIONS_DATA, SkillActionData, SkillActionDataParameters } from './skill-actions-data';
+
+const ACTION_ICONS: Record<ActionType, string> = {
+  A: 'OneAction',
+  D: 'TwoActions',
+  T: 'ThreeActions',
+  F: 'FreeAction',
+  R: 'Reaction',
+  '': 'Passive',
+};
 
 interface RollOption {
   label: string;
@@ -15,23 +24,13 @@ export interface ActorSkillAction {
   visible: boolean;
 }
 
-export interface SkillActionData {
-  key: string;
-  label: string;
-  translation: string;
-  icon: string;
-  proficiencyKey: string;
-  trainingRequired: boolean;
-  featRequired: boolean;
-  featSlug?: string;
-  actor: Actor;
-}
-
 export class SkillAction {
   data: SkillActionData;
 
-  constructor(data: SkillActionData) {
-    data.icon = 'systems/pf2e/icons/spells/' + data.icon + '.webp';
+  constructor(data: SkillActionDataParameters) {
+    data.actionType ??= 'A';
+    if (data.icon) data.icon = 'systems/pf2e/icons/spells/' + data.icon + '.webp';
+    else data.icon = 'systems/pf2e/icons/actions/' + ACTION_ICONS[data.actionType] + '.webp';
     this.data = data;
   }
 
@@ -58,7 +57,7 @@ export class SkillAction {
   getData({ allVisible }: { allVisible: boolean }) {
     const enabled =
       (!this.data.trainingRequired || this.skill._modifiers[1].modifier > 0 || this.hasUntrainedImprovisation()) &&
-      (!this.data.featRequired || this.hasFeat()) &&
+      (!this.data.featSlug || this.hasFeat()) &&
       (this.visible || allVisible);
 
     return {

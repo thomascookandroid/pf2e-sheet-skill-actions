@@ -1,4 +1,57 @@
-export const SKILL_ACTIONS_DATA = [
+import { PartialBy } from './utils';
+
+export type ActionType = 'A' | 'D' | 'T' | 'F' | 'R' | '';
+
+export interface SkillActionData {
+  key: string;
+  label: string;
+  translation: string;
+  icon: string;
+  proficiencyKey: string;
+  trainingRequired: boolean;
+  featSlug?: string;
+  actionType: ActionType;
+  actor: Actor;
+}
+
+export type SkillActionDataParameters = PartialBy<SkillActionData, 'actionType' | 'icon'>;
+
+export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
+  {
+    key: 'balance',
+    label: 'Balance',
+    translation: 'PF2E.Actions.Balance.Title',
+    proficiencyKey: 'acr',
+    trainingRequired: false,
+  },
+  {
+    key: 'tumbleThrough',
+    label: 'Tumble Through',
+    translation: 'PF2E.Actions.TumbleThrough.Title',
+    proficiencyKey: 'acr',
+    trainingRequired: false,
+  },
+  {
+    key: 'maneuverInFlight',
+    label: 'Maneuver in Flight',
+    translation: 'PF2E.Actions.ManeuverInFlight.Title',
+    proficiencyKey: 'acr',
+    trainingRequired: true,
+  },
+  {
+    key: 'climb',
+    label: 'Climb',
+    translation: 'PF2E.Actions.Climb.Title',
+    proficiencyKey: 'ath',
+    trainingRequired: false,
+  },
+  {
+    key: 'forceOpen',
+    label: 'Force Open',
+    translation: 'PF2E.Actions.ForceOpen.Title',
+    proficiencyKey: 'ath',
+    trainingRequired: false,
+  },
   {
     key: 'disarm',
     label: 'Disarm',
@@ -6,7 +59,6 @@ export const SKILL_ACTIONS_DATA = [
     proficiencyKey: 'ath',
     trainingRequired: true,
     icon: 'perfect-strike',
-    featRequired: false,
   },
   {
     key: 'grapple',
@@ -15,7 +67,29 @@ export const SKILL_ACTIONS_DATA = [
     proficiencyKey: 'ath',
     trainingRequired: false,
     icon: 'remove-fear',
-    featRequired: false,
+  },
+  {
+    key: 'highJump',
+    label: 'High Jump',
+    translation: 'PF2E.Actions.HighJump.Title',
+    proficiencyKey: 'ath',
+    trainingRequired: false,
+    actionType: 'D',
+  },
+  {
+    key: 'longJump',
+    label: 'Long Jump',
+    translation: 'PF2E.Actions.LongJump.Title',
+    proficiencyKey: 'ath',
+    trainingRequired: false,
+    actionType: 'D',
+  },
+  {
+    key: 'swim',
+    label: 'Swim',
+    translation: 'PF2E.Actions.Swim.Title',
+    proficiencyKey: 'ath',
+    trainingRequired: false,
   },
   {
     key: 'trip',
@@ -24,7 +98,6 @@ export const SKILL_ACTIONS_DATA = [
     proficiencyKey: 'ath',
     trainingRequired: false,
     icon: 'natures-enmity',
-    featRequired: false,
   },
   {
     key: 'demoralize',
@@ -33,7 +106,6 @@ export const SKILL_ACTIONS_DATA = [
     proficiencyKey: 'itm',
     trainingRequired: false,
     icon: 'blind-ambition',
-    featRequired: false,
   },
   {
     key: 'shove',
@@ -42,7 +114,6 @@ export const SKILL_ACTIONS_DATA = [
     proficiencyKey: 'ath',
     trainingRequired: false,
     icon: 'ki-strike',
-    featRequired: false,
   },
   {
     key: 'feint',
@@ -51,7 +122,35 @@ export const SKILL_ACTIONS_DATA = [
     proficiencyKey: 'dec',
     trainingRequired: true,
     icon: 'delay-consequence',
-    featRequired: false,
+  },
+  {
+    key: 'request',
+    label: 'Request',
+    translation: 'PF2E.Actions.Request.Title',
+    proficiencyKey: 'dip',
+    trainingRequired: false,
+  },
+  {
+    key: 'hide',
+    label: 'Hide',
+    translation: 'PF2E.Actions.Hide.Title',
+    proficiencyKey: 'ste',
+    trainingRequired: false,
+  },
+  {
+    key: 'sneak',
+    label: 'Sneak',
+    translation: 'PF2E.Actions.Sneak.Title',
+    proficiencyKey: 'ste',
+    trainingRequired: false,
+  },
+  {
+    key: 'pickALock',
+    label: 'Pick a Lock',
+    translation: 'PF2E.Actions.PickALock.Title',
+    proficiencyKey: 'thi',
+    trainingRequired: true,
+    actionType: 'D',
   },
   {
     key: 'bonMot',
@@ -60,7 +159,6 @@ export const SKILL_ACTIONS_DATA = [
     proficiencyKey: 'dip',
     trainingRequired: false,
     icon: 'hideous-laughter',
-    featRequired: true,
     featSlug: 'bon-mot',
   },
 ];
