@@ -50,7 +50,7 @@ export class SkillAction {
   }
 
   get pf2eItem() {
-    return ActionsIndex.instance.get(this.data.label);
+    return ActionsIndex.instance.get(this.data.key);
   }
 
   getData({ allVisible }: { allVisible: boolean }) {
@@ -63,7 +63,7 @@ export class SkillAction {
       ...this.data,
       enabled: enabled,
       visible: this.visible,
-      label: game.i18n.localize(this.skill.label) + ': ' + this.data.label,
+      label: game.i18n.localize(this.skill.label) + ': ' + game.i18n.localize(this.data.label),
       rollOptions: this.rollOptions(),
     };
   }
@@ -110,7 +110,7 @@ export class SkillAction {
 
   private hasFeat() {
     const items = this.actor.data.items;
-    const result = items.filter((item) => item.data.name === this.data.label);
+    const result = items.filter((item) => item.data.date.slug === this.data.key);
     return result.length > 0;
   }
 }
