@@ -28,6 +28,7 @@ export class SkillAction {
   data: SkillActionData;
 
   constructor(data: SkillActionDataParameters) {
+    data.requiredRank ??= 0;
     data.actionType ??= 'A';
     if (data.icon) data.icon = 'systems/pf2e/icons/spells/' + data.icon + '.webp';
     else data.icon = 'systems/pf2e/icons/actions/' + ACTION_ICONS[data.actionType] + '.webp';
@@ -51,20 +52,18 @@ export class SkillAction {
   }
 
   get pf2eItem() {
-    return ActionsIndex.instance.get(this.data.label);
+    return ActionsIndex.instance.get(this.data.slug);
   }
 
   getData({ allVisible }: { allVisible: boolean }) {
     const enabled =
-      (!this.data.trainingRequired || this.skill._modifiers[1].modifier > 0 || this.hasUntrainedImprovisation()) &&
-      (!this.data.featSlug || this.hasFeat()) &&
-      (this.visible || allVisible);
+      this.hasSkillRank() && (this.pf2eItem.type !== 'feat' || this.actorHasItem()) && (this.visible || allVisible);
 
     return {
       ...this.data,
       enabled: enabled,
       visible: this.visible,
-      label: game.i18n.localize(this.skill.label) + ': ' + game.i18n.localize(this.data.translation),
+      label: game.i18n.localize(this.skill.label) + ': ' + this.pf2eItem.name,
       rollOptions: this.rollOptions(),
     };
   }
@@ -109,16 +108,15 @@ export class SkillAction {
     return result;
   }
 
-  private hasFeat() {
-    const items = this.actor.data.items;
-    const result = items.filter((item) => item.data.data.slug === this.data.featSlug);
-    return result.length > 0;
+  private actorHasItem(slug = this.data.slug) {
+    return !!this.actor.items.find((item) => item.slug === slug);
   }
 
-  private hasUntrainedImprovisation() {
-    const items = this.actor.data.items;
-    const result = items.filter((item) => item.data.data.slug === 'clever-improviser');
-    return result.length > 0;
+  private hasSkillRank() {
+    return (
+      this.skill.rank >= this.data.requiredRank ||
+      (this.data.requiredRank === 1 && this.actorHasItem('clever-improviser'))
+    );
   }
 }
 
