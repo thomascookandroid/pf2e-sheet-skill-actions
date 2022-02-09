@@ -1,6 +1,6 @@
 export const SKILL_ACTIONS_DATA = [
   {
-    key: 'disarm',
+    key: 'Disarm',
     label: 'PF2E.Actions.Disarm.Title',
     proficiencyKey: 'ath',
     trainingRequired: true,
@@ -8,7 +8,7 @@ export const SKILL_ACTIONS_DATA = [
     featRequired: false,
   },
   {
-    key: 'grapple',
+    key: 'Grapple',
     label: 'PF2E.Actions.Grapple.Title',
     proficiencyKey: 'ath',
     trainingRequired: false,
@@ -16,7 +16,7 @@ export const SKILL_ACTIONS_DATA = [
     featRequired: false,
   },
   {
-    key: 'trip',
+    key: 'Trip',
     label: 'PF2E.Actions.Trip.Title',
     proficiencyKey: 'ath',
     trainingRequired: false,
@@ -24,7 +24,7 @@ export const SKILL_ACTIONS_DATA = [
     featRequired: false,
   },
   {
-    key: 'demoralize',
+    key: 'Demoralize',
     label: 'PF2E.Actions.Demoralize.Title',
     proficiencyKey: 'itm',
     trainingRequired: false,
@@ -32,7 +32,7 @@ export const SKILL_ACTIONS_DATA = [
     featRequired: false,
   },
   {
-    key: 'shove',
+    key: 'Shove',
     label: 'PF2E.Actions.Shove.Title',
     proficiencyKey: 'ath',
     trainingRequired: false,
@@ -40,7 +40,7 @@ export const SKILL_ACTIONS_DATA = [
     featRequired: false,
   },
   {
-    key: 'feint',
+    key: 'Feint',
     label: 'PF2E.Actions.Feint.Title',
     proficiencyKey: 'dec',
     trainingRequired: true,
@@ -48,11 +48,12 @@ export const SKILL_ACTIONS_DATA = [
     featRequired: false,
   },
   {
-    key: 'bon-mot',
+    key: 'Bon Mot',
     label: 'PF2E.Actions.BonMot.Title',
     proficiencyKey: 'dip',
     trainingRequired: false,
     icon: 'hideous-laughter',
     featRequired: true,
+    featSlug: 'bon-mot',
   },
 ];

@@ -22,6 +22,7 @@ export interface SkillActionData {
   proficiencyKey: string;
   trainingRequired: boolean;
   featRequired: boolean;
+  featSlug?: string;
   actor: Actor;
 }
 
@@ -55,7 +56,7 @@ export class SkillAction {
 
   getData({ allVisible }: { allVisible: boolean }) {
     const enabled =
-      (!this.data.trainingRequired || this.skill._modifiers[1].modifier > 0) &&
+      (!this.data.trainingRequired || this.skill._modifiers[1].modifier > 0 || this.hasUntrainedImprovisation()) &&
       (!this.data.featRequired || this.hasFeat()) &&
       (this.visible || allVisible);
 
@@ -110,7 +111,13 @@ export class SkillAction {
 
   private hasFeat() {
     const items = this.actor.data.items;
-    const result = items.filter((item) => item.data.data.slug === this.data.key);
+    const result = items.filter((item) => item.data.data.slug === this.data.featSlug);
+    return result.length > 0;
+  }
+
+  private hasUntrainedImprovisation() {
+    const items = this.actor.data.items;
+    const result = items.filter((item) => item.data.data.slug === 'clever-improviser');
     return result.length > 0;
   }
 }
