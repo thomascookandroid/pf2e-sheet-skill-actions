@@ -110,7 +110,7 @@ export class SkillAction {
 
   private hasFeat() {
     const items = this.actor.data.items;
-    const result = items.filter((item) => item.data.date.slug === this.data.key);
+    const result = items.filter((item) => item.data.data.slug === this.data.key);
     return result.length > 0;
   }
 }
