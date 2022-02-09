@@ -18,6 +18,7 @@ export interface ActorSkillAction {
 export interface SkillActionData {
   key: string;
   label: string;
+  translation: string;
   icon: string;
   proficiencyKey: string;
   trainingRequired: boolean;
@@ -51,7 +52,7 @@ export class SkillAction {
   }
 
   get pf2eItem() {
-    return ActionsIndex.instance.get(this.data.key);
+    return ActionsIndex.instance.get(this.data.label);
   }
 
   getData({ allVisible }: { allVisible: boolean }) {
@@ -64,7 +65,7 @@ export class SkillAction {
       ...this.data,
       enabled: enabled,
       visible: this.visible,
-      label: game.i18n.localize(this.skill.label) + ': ' + game.i18n.localize(this.data.label),
+      label: game.i18n.localize(this.skill.label) + ': ' + game.i18n.localize(this.data.translation),
       rollOptions: this.rollOptions(),
     };
   }
