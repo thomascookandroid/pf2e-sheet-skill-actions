@@ -5,6 +5,7 @@ import { ActionsIndex } from './actions-index';
 import { Flag } from './utils';
 import { ModifierPF2e } from './pf2e';
 import { ActionType, SKILL_ACTIONS_DATA, SkillActionData, SkillActionDataParameters } from './skill-actions-data';
+import { ItemConstructor } from './globals';
 
 const ACTION_ICONS: Record<ActionType, string> = {
   A: 'OneAction',
@@ -76,11 +77,11 @@ export class SkillAction {
     await Flag.set(this.actor, `actions.${this.key}`, data);
   }
 
-  rollSkillAction(e) {
+  async rollSkillAction(event) {
     if (!(game instanceof Game)) return;
 
     const modifiers = [];
-    const map = parseInt(e.currentTarget.dataset.map);
+    const map = parseInt(event.currentTarget.dataset.map);
 
     if (map) {
       modifiers.push(
@@ -92,7 +93,19 @@ export class SkillAction {
       );
     }
 
-    game.pf2e.actions[this.key]({ event: e, modifiers });
+    const rollAction = game.pf2e.actions[this.key];
+    if (rollAction) {
+      await rollAction({ event, modifiers, actors: [this.actor] });
+    } else {
+      await this.toChat();
+      await this.skill.roll({ event, modifiers, options: [`action:${this.slug}`] });
+    }
+  }
+
+  async toChat() {
+    const constructor = this.pf2eItem.constructor as ItemConstructor;
+    const ownedItem = new constructor(this.pf2eItem.toJSON(), { parent: this.actor });
+    await ownedItem.toChat();
   }
 
   rollOptions(): Array<RollOption> {

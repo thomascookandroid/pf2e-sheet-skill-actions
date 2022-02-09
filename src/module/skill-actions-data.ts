@@ -132,6 +132,11 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     icon: 'ward-domain',
   },
   {
+    key: 'steal',
+    slug: 'steal',
+    proficiencyKey: 'thi',
+  },
+  {
     key: 'bonMot',
     slug: 'bon-mot',
     proficiencyKey: 'dip',
