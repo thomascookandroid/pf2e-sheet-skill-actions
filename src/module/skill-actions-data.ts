@@ -1,176 +1,140 @@
 import { PartialBy } from './utils';
+import { Rank } from './globals';
 
 export type ActionType = 'A' | 'D' | 'T' | 'F' | 'R' | '';
 
 export interface SkillActionData {
   key: string;
-  label: string;
-  translation: string;
+  slug: string;
   icon: string;
   proficiencyKey: string;
-  trainingRequired: boolean;
-  featSlug?: string;
+  requiredRank: Rank;
   actionType: ActionType;
   actor: Actor;
 }
 
-export type SkillActionDataParameters = PartialBy<SkillActionData, 'actionType' | 'icon'>;
+export type SkillActionDataParameters = PartialBy<SkillActionData, 'actionType' | 'icon' | 'requiredRank'>;
 
 export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   {
     key: 'balance',
-    label: 'Balance',
-    translation: 'PF2E.Actions.Balance.Title',
+    slug: 'balance',
     proficiencyKey: 'acr',
-    trainingRequired: false,
     icon: 'freedom-of-movement',
   },
   {
     key: 'tumbleThrough',
-    label: 'Tumble Through',
-    translation: 'PF2E.Actions.TumbleThrough.Title',
+    slug: 'tumble-through',
     proficiencyKey: 'acr',
-    trainingRequired: false,
     icon: 'unimpeded-stride',
   },
   {
     key: 'maneuverInFlight',
-    label: 'Maneuver in Flight',
-    translation: 'PF2E.Actions.ManeuverInFlight.Title',
+    slug: 'maneuver-in-flight',
     proficiencyKey: 'acr',
-    trainingRequired: true,
+    requiredRank: 1,
     icon: 'fleet-step',
   },
   {
     key: 'climb',
-    label: 'Climb',
-    translation: 'PF2E.Actions.Climb.Title',
+    slug: 'climb',
     proficiencyKey: 'ath',
-    trainingRequired: false,
     icon: 'heroic-feat',
   },
   {
     key: 'forceOpen',
-    label: 'Force Open',
-    translation: 'PF2E.Actions.ForceOpen.Title',
+    slug: 'force-open',
     proficiencyKey: 'ath',
-    trainingRequired: false,
     icon: 'indestructibility',
   },
   {
     key: 'disarm',
-    label: 'Disarm',
-    translation: 'PF2E.Actions.Disarm.Title',
+    slug: 'disarm',
     proficiencyKey: 'ath',
-    trainingRequired: true,
+    requiredRank: 1,
     icon: 'perfect-strike',
   },
   {
     key: 'grapple',
-    label: 'Grapple',
-    translation: 'PF2E.Actions.Grapple.Title',
+    slug: 'grapple',
     proficiencyKey: 'ath',
-    trainingRequired: false,
     icon: 'remove-fear',
   },
   {
     key: 'highJump',
-    label: 'High Jump',
-    translation: 'PF2E.Actions.HighJump.Title',
+    slug: 'high-jump',
     proficiencyKey: 'ath',
-    trainingRequired: false,
     actionType: 'D',
     icon: 'jump',
   },
   {
     key: 'longJump',
-    label: 'Long Jump',
-    translation: 'PF2E.Actions.LongJump.Title',
+    slug: 'long-jump',
     proficiencyKey: 'ath',
-    trainingRequired: false,
     actionType: 'D',
     icon: 'longstrider',
   },
   {
     key: 'swim',
-    label: 'Swim',
-    translation: 'PF2E.Actions.Swim.Title',
+    slug: 'swim',
     proficiencyKey: 'ath',
-    trainingRequired: false,
     icon: 'waters-of-prediction',
   },
   {
     key: 'trip',
-    label: 'Trip',
-    translation: 'PF2E.Actions.Trip.Title',
+    slug: 'trip',
     proficiencyKey: 'ath',
-    trainingRequired: false,
     icon: 'natures-enmity',
   },
   {
     key: 'demoralize',
-    label: 'Demoralize',
-    translation: 'PF2E.Actions.Demoralize.Title',
+    slug: 'demoralize',
     proficiencyKey: 'itm',
-    trainingRequired: false,
     icon: 'blind-ambition',
   },
   {
     key: 'shove',
-    label: 'Shove',
-    translation: 'PF2E.Actions.Shove.Title',
+    slug: 'shove',
     proficiencyKey: 'ath',
-    trainingRequired: false,
     icon: 'ki-strike',
   },
   {
     key: 'feint',
-    label: 'Feint',
-    translation: 'PF2E.Actions.Feint.Title',
+    slug: 'feint',
     proficiencyKey: 'dec',
-    trainingRequired: true,
+    requiredRank: 1,
     icon: 'delay-consequence',
   },
   {
     key: 'request',
-    label: 'Request',
-    translation: 'PF2E.Actions.Request.Title',
+    slug: 'request',
     proficiencyKey: 'dip',
-    trainingRequired: false,
     icon: 'cackle',
   },
   {
     key: 'hide',
-    label: 'Hide',
-    translation: 'PF2E.Actions.Hide.Title',
+    slug: 'hide',
     proficiencyKey: 'ste',
-    trainingRequired: false,
     icon: 'zealous-conviction',
   },
   {
     key: 'sneak',
-    label: 'Sneak',
-    translation: 'PF2E.Actions.Sneak.Title',
+    slug: 'sneak',
     proficiencyKey: 'ste',
-    trainingRequired: false,
     icon: 'invisibility',
   },
   {
     key: 'pickALock',
-    label: 'Pick a Lock',
-    translation: 'PF2E.Actions.PickALock.Title',
+    slug: 'pick-a-lock',
     proficiencyKey: 'thi',
-    trainingRequired: true,
+    requiredRank: 1,
     actionType: 'D',
     icon: 'ward-domain',
   },
   {
     key: 'bonMot',
-    label: 'Bon Mot',
-    translation: 'PF2E.Actions.BonMot.Title',
+    slug: 'bon-mot',
     proficiencyKey: 'dip',
-    trainingRequired: false,
     icon: 'hideous-laughter',
-    featSlug: 'bon-mot',
   },
 ];
