@@ -4,7 +4,16 @@
 import { ActionsIndex } from './actions-index';
 import { Flag } from './utils';
 import { ModifierPF2e } from './pf2e';
-import { SKILL_ACTIONS_DATA } from './skill-actions-data';
+import { ActionType, SKILL_ACTIONS_DATA, SkillActionData, SkillActionDataParameters } from './skill-actions-data';
+
+const ACTION_ICONS: Record<ActionType, string> = {
+  A: 'OneAction',
+  D: 'TwoActions',
+  T: 'ThreeActions',
+  F: 'FreeAction',
+  R: 'Reaction',
+  '': 'Passive',
+};
 
 interface RollOption {
   label: string;
@@ -15,21 +24,14 @@ export interface ActorSkillAction {
   visible: boolean;
 }
 
-export interface SkillActionData {
-  key: string;
-  label: string;
-  icon: string;
-  proficiencyKey: string;
-  trainingRequired: boolean;
-  featRequired: boolean;
-  actor: Actor;
-}
-
 export class SkillAction {
   data: SkillActionData;
 
-  constructor(data: SkillActionData) {
-    data.icon = 'systems/pf2e/icons/spells/' + data.icon + '.webp';
+  constructor(data: SkillActionDataParameters) {
+    data.requiredRank ??= 0;
+    data.actionType ??= 'A';
+    if (data.icon) data.icon = 'systems/pf2e/icons/spells/' + data.icon + '.webp';
+    else data.icon = 'systems/pf2e/icons/actions/' + ACTION_ICONS[data.actionType] + '.webp';
     this.data = data;
   }
 
@@ -50,20 +52,18 @@ export class SkillAction {
   }
 
   get pf2eItem() {
-    return ActionsIndex.instance.get(this.data.label);
+    return ActionsIndex.instance.get(this.data.slug);
   }
 
   getData({ allVisible }: { allVisible: boolean }) {
     const enabled =
-      (!this.data.trainingRequired || this.skill._modifiers[1].modifier > 0) &&
-      (!this.data.featRequired || this.hasFeat()) &&
-      (this.visible || allVisible);
+      this.hasSkillRank() && (this.pf2eItem.type !== 'feat' || this.actorHasItem()) && (this.visible || allVisible);
 
     return {
       ...this.data,
       enabled: enabled,
       visible: this.visible,
-      label: game.i18n.localize(this.skill.label) + ': ' + this.data.label,
+      label: game.i18n.localize(this.skill.label) + ': ' + this.pf2eItem.name,
       rollOptions: this.rollOptions(),
     };
   }
@@ -108,10 +108,15 @@ export class SkillAction {
     return result;
   }
 
-  private hasFeat() {
-    const items = this.actor.data.items;
-    const result = items.filter((item) => item.data.name === this.data.label);
-    return result.length > 0;
+  private actorHasItem(slug = this.data.slug) {
+    return !!this.actor.items.find((item) => item.slug === slug);
+  }
+
+  private hasSkillRank() {
+    return (
+      this.skill.rank >= this.data.requiredRank ||
+      (this.data.requiredRank === 1 && this.actorHasItem('clever-improviser'))
+    );
   }
 }
 

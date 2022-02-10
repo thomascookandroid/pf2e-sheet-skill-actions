@@ -17,6 +17,20 @@ export interface ItemTraits extends ValuesList {
   rarity: string;
 }
 
+export type Rank = 0 | 1 | 2 | 3 | 4;
+
+interface CharacterSkillData {
+  rank: Rank;
+}
+
+interface BaseActorDataPF2e {
+  skills: Record<string, CharacterSkillData>;
+}
+
+interface BaseActorSourcePF2e {
+  data: BaseActorDataPF2e;
+}
+
 interface BaseItemDataPF2e {
   traits?: ItemTraits;
 }
@@ -26,6 +40,7 @@ interface BaseItemSourcePF2e {
 }
 
 export class ItemPF2e extends Item {
+  slug: string | null;
   toChat(event?: JQuery.TriggeredEvent): Promise<undefined>;
   calculateMap(): { label: string; map2: number; map3: number };
 }
@@ -47,6 +62,7 @@ declare global {
     Item: typeof ItemPF2e;
   }
   interface DataConfig {
+    Actor: BaseActorSourcePF2e;
     Item: BaseItemSourcePF2e;
   }
   interface FlagConfig {
