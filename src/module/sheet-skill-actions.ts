@@ -62,11 +62,7 @@ Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) 
   });
 
   $items.on('click', '.item-image', function (e) {
-    const pf2eItem = skillActions.fromEvent(e).pf2eItem;
-    if (!pf2eItem) return;
-
-    const ownedItem = new (pf2eItem.constructor as ItemConstructor)(pf2eItem.toJSON(), { parent: app.actor });
-    ownedItem.toChat();
+    skillActions.fromEvent(e).toChat();
   });
 
   $items.on('click', '.item-toggle-equip', function (e) {
