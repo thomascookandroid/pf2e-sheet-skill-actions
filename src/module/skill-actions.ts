@@ -44,6 +44,10 @@ export class SkillAction {
     return this.data.key;
   }
 
+  get label() {
+    return game.i18n.localize(this.skill.label) + ': ' + this.pf2eItem.name;
+  }
+
   get skill() {
     return this.actor.data.data.skills[this.data.proficiencyKey];
   }
@@ -56,15 +60,23 @@ export class SkillAction {
     return ActionsIndex.instance.get(this.data.slug);
   }
 
+  isDisplayed(filter: string, allVisible: boolean) {
+    if (filter) {
+      return this.label.toLowerCase().includes(filter);
+    } else {
+      return this.visible || allVisible;
+    }
+  }
+
   getData({ allVisible }: { allVisible: boolean }) {
-    const enabled =
-      this.hasSkillRank() && (this.pf2eItem.type !== 'feat' || this.actorHasItem()) && (this.visible || allVisible);
+    const enabled = this.hasSkillRank() && (this.pf2eItem.type !== 'feat' || this.actorHasItem());
 
     return {
       ...this.data,
       enabled: enabled,
       visible: this.visible,
-      label: game.i18n.localize(this.skill.label) + ': ' + this.pf2eItem.name,
+      displayed: this.isDisplayed('', allVisible),
+      label: this.label,
       rollOptions: this.rollOptions(),
     };
   }
@@ -142,7 +154,11 @@ export class SkillActionCollection extends Collection<SkillAction> {
     );
   }
 
+  fromElement(el: HTMLElement) {
+    return this.get(el.dataset.actionId, { strict: true });
+  }
+
   fromEvent(e: JQuery.TriggeredEvent) {
-    return this.get(e.delegateTarget.dataset.actionId, { strict: true });
+    return this.fromElement(e.delegateTarget);
   }
 }
