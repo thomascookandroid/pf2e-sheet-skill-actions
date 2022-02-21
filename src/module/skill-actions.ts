@@ -29,6 +29,7 @@ export class SkillAction {
   data: SkillActionData;
 
   constructor(data: SkillActionDataParameters) {
+    data.key ??= data.slug.replace(/-(\w)/g, (_, letter) => letter.toUpperCase());
     data.requiredRank ??= 0;
     data.actionType ??= 'A';
     if (data.icon) data.icon = 'systems/pf2e/icons/spells/' + data.icon + '.webp';
@@ -137,7 +138,8 @@ export class SkillActionCollection extends Collection<SkillAction> {
   constructor(actor: Actor) {
     super(
       deepClone(SKILL_ACTIONS_DATA).map(function (row) {
-        return [row.key, new SkillAction({ ...row, actor: actor })];
+        const action = new SkillAction({ ...row, actor: actor });
+        return [action.key, action];
       }),
     );
   }
