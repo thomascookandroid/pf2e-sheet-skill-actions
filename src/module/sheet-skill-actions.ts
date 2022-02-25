@@ -14,7 +14,6 @@
 import { registerSettings } from './settings';
 import { preloadTemplates } from './preloadTemplates';
 import { ActionsIndex } from './actions-index';
-import { ItemConstructor } from './globals';
 import { Flag } from './utils';
 import { SkillActionCollection } from './skill-actions';
 
@@ -57,16 +56,20 @@ Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) 
     Flag.set(app.actor, 'allVisible', !Flag.get(app.actor, 'allVisible'));
   });
 
+  skillActionHtml.on('input', 'input[name="filter"]', function (e) {
+    const filter = e.currentTarget.value.toLowerCase();
+    $items.each(function () {
+      const action = skillActions.fromElement(this);
+      $(this).toggle(action.isDisplayed(filter, allVisible));
+    });
+  });
+
   $items.on('click', '.skill-action.tag.variant-strike', function (e) {
     skillActions.fromEvent(e).rollSkillAction(e);
   });
 
   $items.on('click', '.item-image', function (e) {
-    const pf2eItem = skillActions.fromEvent(e).pf2eItem;
-    if (!pf2eItem) return;
-
-    const ownedItem = new (pf2eItem.constructor as ItemConstructor)(pf2eItem.toJSON(), { parent: app.actor });
-    ownedItem.toChat();
+    skillActions.fromEvent(e).toChat();
   });
 
   $items.on('click', '.item-toggle-equip', function (e) {
