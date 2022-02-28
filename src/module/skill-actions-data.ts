@@ -16,6 +16,7 @@ export interface SkillActionData {
 export type SkillActionDataParameters = PartialBy<SkillActionData, 'key' | 'actionType' | 'icon' | 'requiredRank'>;
 
 export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
+  // Acrobatics
   {
     slug: 'balance',
     proficiencyKey: 'acr',
@@ -32,6 +33,12 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     requiredRank: 1,
     icon: 'fleet-step',
   },
+  // Arcana
+  {
+    slug: 'recall-knowledge-arcana',
+    proficiencyKey: 'arc',
+  },
+  // Athletics
   {
     slug: 'climb',
     proficiencyKey: 'ath',
@@ -66,6 +73,11 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     icon: 'longstrider',
   },
   {
+    slug: 'shove',
+    proficiencyKey: 'ath',
+    icon: 'ki-strike',
+  },
+  {
     slug: 'swim',
     proficiencyKey: 'ath',
     icon: 'waters-of-prediction',
@@ -75,26 +87,74 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     proficiencyKey: 'ath',
     icon: 'natures-enmity',
   },
+  // Crafting
   {
-    slug: 'demoralize',
-    proficiencyKey: 'itm',
-    icon: 'blind-ambition',
+    slug: 'recall-knowledge-crafting',
+    proficiencyKey: 'cra',
   },
-  {
-    slug: 'shove',
-    proficiencyKey: 'ath',
-    icon: 'ki-strike',
-  },
+  // Deception
   {
     slug: 'feint',
     proficiencyKey: 'dec',
     requiredRank: 1,
     icon: 'delay-consequence',
   },
+  // Diplomacy
   {
     slug: 'request',
     proficiencyKey: 'dip',
     icon: 'cackle',
+  },
+  // Intimidation
+  {
+    slug: 'demoralize',
+    proficiencyKey: 'itm',
+    icon: 'blind-ambition',
+  },
+  // Medicine
+  {
+    slug: 'administer-first-aid',
+    proficiencyKey: 'med',
+    actionType: 'D',
+  },
+  {
+    slug: 'treat-poison',
+    proficiencyKey: 'med',
+    requiredRank: 1,
+  },
+  // Nature
+  {
+    slug: 'command-an-animal',
+    proficiencyKey: 'nat',
+  },
+  {
+    slug: 'recall-knowledge-nature',
+    proficiencyKey: 'nat',
+  },
+  // Occultism
+  {
+    slug: 'recall-knowledge-occultism',
+    proficiencyKey: 'occ',
+  },
+  // Performance
+  {
+    slug: 'perform',
+    proficiencyKey: 'prf',
+  },
+  // Religion
+  {
+    slug: 'recall-knowledge-religion',
+    proficiencyKey: 'rel',
+  },
+  // Society
+  {
+    slug: 'recall-knowledge-society',
+    proficiencyKey: 'soc',
+  },
+  // Stealth
+  {
+    slug: 'conceal-an-object',
+    proficiencyKey: 'ste',
   },
   {
     slug: 'hide',
@@ -105,6 +165,18 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     slug: 'sneak',
     proficiencyKey: 'ste',
     icon: 'invisibility',
+  },
+  // Survival
+  // Thievery
+  {
+    slug: 'disable-device',
+    proficiencyKey: 'thi',
+    requiredRank: 1,
+    actionType: 'D',
+  },
+  {
+    slug: 'palm-an-object',
+    proficiencyKey: 'thi',
   },
   {
     slug: 'pick-a-lock',
@@ -117,6 +189,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     slug: 'steal',
     proficiencyKey: 'thi',
   },
+  // Feat based
   {
     slug: 'bon-mot',
     proficiencyKey: 'dip',
