@@ -27,8 +27,8 @@
           </div>
         </div>
         <div class="button-group tags">
-          {{#each rollOptions}}
-          <button type="button" class="skill-action tag variant-strike" data-map="{{map}}">{{label}}</button>
+          {{#each variants}}
+          <button type="button" class="skill-action tag variant-strike" data-variant="{{@index}}">{{label}}</button>
           {{/each}}
         </div>
       </div>

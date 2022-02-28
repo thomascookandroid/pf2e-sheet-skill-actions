@@ -3,6 +3,12 @@ import { Rank } from './globals';
 
 export type ActionType = 'A' | 'D' | 'T' | 'F' | 'R' | '';
 
+interface Variant {
+  label: string;
+  map?: number;
+  extra?: Record<string, unknown>;
+}
+
 export interface SkillActionData {
   key: string;
   slug: string;
@@ -10,6 +16,7 @@ export interface SkillActionData {
   proficiencyKey: string;
   requiredRank: Rank;
   actionType: ActionType;
+  variants?: () => Variant[];
   actor: Actor;
 }
 
@@ -93,6 +100,17 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     proficiencyKey: 'cra',
   },
   // Deception
+  {
+    slug: 'create-a-diversion',
+    proficiencyKey: 'dec',
+    variants: function () {
+      return [
+        { label: 'Distracting Words', extra: { variant: 'distracting-words' } },
+        { label: 'Gesture', extra: { variant: 'gesture' } },
+        { label: 'Trick', extra: { variant: 'trick' } },
+      ];
+    },
+  },
   {
     slug: 'feint',
     proficiencyKey: 'dec',

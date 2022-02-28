@@ -22,4 +22,5 @@ I love you.
   * **requiredRank** - add action requires training in skill. 0 - untrained (default), 1 - trained, 2 - expert, 3 - master, 4 - legendary.
   * **actionType** - add if this does not use 1 action. 'A' - 1 action (default), 'D' - 2 actions, 'T' - 3 actions, 'F' - free action, 'R' - reaction.
   * **key** - is used to match action implemented by PF2e. You shouldn't need to specify it.
+  * **variants** - an array of variants to the action in case you want more than one button. MAP variants are added automatically.
 * Click "Propose changes" and "Create pull request".
