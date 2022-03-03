@@ -16,11 +16,6 @@ const ACTION_ICONS: Record<ActionType, string> = {
   '': 'Passive',
 };
 
-interface RollOption {
-  label: string;
-  map: number;
-}
-
 export interface ActorSkillAction {
   visible: boolean;
 }
@@ -35,6 +30,8 @@ export class SkillAction {
     if (data.icon) data.icon = 'systems/pf2e/icons/spells/' + data.icon + '.webp';
     else data.icon = 'systems/pf2e/icons/actions/' + ACTION_ICONS[data.actionType] + '.webp';
     this.data = data;
+
+    this.buildVariants();
   }
 
   get actor() {
@@ -78,7 +75,7 @@ export class SkillAction {
       visible: this.visible,
       displayed: this.isDisplayed('', allVisible),
       label: this.label,
-      rollOptions: this.rollOptions(),
+      variants: this.variants,
     };
   }
 
@@ -94,13 +91,13 @@ export class SkillAction {
     if (!(game instanceof Game)) return;
 
     const modifiers = [];
-    const map = parseInt(event.currentTarget.dataset.map);
+    const variant = this.variants[parseInt(event.currentTarget.dataset.variant)];
 
-    if (map) {
+    if (variant.map) {
       modifiers.push(
         new ModifierPF2e({
           label: game.i18n.localize('PF2E.MultipleAttackPenalty'),
-          modifier: map,
+          modifier: variant.map,
           type: 'untyped',
         }),
       );
@@ -108,7 +105,7 @@ export class SkillAction {
 
     const rollAction = game.pf2e.actions[this.key];
     if (rollAction) {
-      await rollAction({ event, modifiers, actors: [this.actor] });
+      await rollAction({ event, modifiers, actors: [this.actor], ...variant.extra });
     } else {
       await this.toChat();
       await this.skill.roll({ event, modifiers, options: [`action:${this.slug}`] });
@@ -121,19 +118,6 @@ export class SkillAction {
     await ownedItem.toChat();
   }
 
-  rollOptions(): Array<RollOption> {
-    const modifier = (this.skill.value >= 0 ? ' +' : ' ') + this.skill.value;
-    const result = [{ label: `Roll ${modifier}`, map: 0 }];
-
-    if (this.pf2eItem.data.data.traits.value.includes('attack')) {
-      const map = this.pf2eItem.calculateMap();
-      result.push({ label: game.i18n.format('PF2E.MAPAbbreviationLabel', { penalty: map.map2 }), map: map.map2 });
-      result.push({ label: game.i18n.format('PF2E.MAPAbbreviationLabel', { penalty: map.map3 }), map: map.map3 });
-    }
-
-    return result;
-  }
-
   private actorHasItem(slug = this.data.slug) {
     return !!this.actor.items.find((item) => item.slug === slug);
   }
@@ -143,6 +127,28 @@ export class SkillAction {
       this.skill.rank >= this.data.requiredRank ||
       (this.data.requiredRank === 1 && this.actorHasItem('clever-improviser'))
     );
+  }
+
+  private buildVariants() {
+    const modifier = (this.skill.value >= 0 ? ' +' : ' ') + this.skill.value;
+
+    if (this.data.variants) {
+      this.variants = this.data.variants.call(this).map(function (variant) {
+        return { ...variant, label: `${variant.label} ${modifier}` };
+      });
+    } else {
+      this.variants = [{ label: `Roll ${modifier}`, map: 0 }];
+
+      if (this.pf2eItem.data.data.traits.value.includes('attack')) {
+        const map = this.pf2eItem.calculateMap();
+        this.addMapVariant(map.map2);
+        this.addMapVariant(map.map3);
+      }
+    }
+  }
+
+  private addMapVariant(map: number) {
+    this.variants.push({ label: game.i18n.format('PF2E.MAPAbbreviationLabel', { penalty: map }), map: map });
   }
 }
 
