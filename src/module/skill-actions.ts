@@ -67,6 +67,10 @@ export class SkillAction {
     }
   }
 
+  hasTrait(trait: string) {
+    return this.pf2eItem.data.data.traits.value.includes(trait);
+  }
+
   getData({ allVisible }: { allVisible: boolean }) {
     const enabled = this.hasSkillRank() && (this.pf2eItem.type !== 'feat' || this.actorHasItem());
 
@@ -140,7 +144,7 @@ export class SkillAction {
     } else {
       this.variants = [{ label: `Roll ${modifier}`, map: 0 }];
 
-      if (this.pf2eItem.data.data.traits.value.includes('attack')) {
+      if (this.hasTrait('attack')) {
         const map = this.pf2eItem.calculateMap();
         this.addMapVariant(map.map2);
         this.addMapVariant(map.map3);
@@ -154,8 +158,8 @@ export class SkillAction {
 }
 
 export class SkillActionCollection extends Collection<SkillAction> {
-  constructor(actor: Actor) {
-    const actions = deepClone(SKILL_ACTIONS_DATA).flatMap(function (row) {
+  static allActionsFor(actor) {
+    return deepClone(SKILL_ACTIONS_DATA).flatMap(function (row) {
       if (row.proficiencyKey == 'lore') {
         const skills = actor.data.data.skills;
 
@@ -173,8 +177,11 @@ export class SkillActionCollection extends Collection<SkillAction> {
         return [new SkillAction({ ...row, actor: actor })];
       }
     });
+  }
 
-    super(actions.map((action) => [action.key, action]));
+  add(action: SkillAction) {
+    if (this.get(action.key)) console.warn('Overwriting existing skill action', action.key);
+    this.set(action.key, action);
   }
 
   fromElement(el: HTMLElement) {
