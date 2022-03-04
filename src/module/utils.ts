@@ -10,3 +10,7 @@ export const Flag = {
     return actor.getFlag('pf2e-sheet-skill-actions', key);
   },
 } as const;
+
+export function camelize(value: string): string {
+  return value.replace(/-(\w)/g, (_, letter) => letter.toUpperCase());
+}

@@ -2,7 +2,7 @@
 // @ts-nocheck
 
 import { ActionsIndex } from './actions-index';
-import { Flag } from './utils';
+import { camelize, Flag } from './utils';
 import { ModifierPF2e } from './pf2e';
 import { ActionType, SKILL_ACTIONS_DATA, SkillActionData, SkillActionDataParameters } from './skill-actions-data';
 import { ItemConstructor } from './globals';
@@ -24,7 +24,7 @@ export class SkillAction {
   data: SkillActionData;
 
   constructor(data: SkillActionDataParameters) {
-    data.key ??= data.slug.replace(/-(\w)/g, (_, letter) => letter.toUpperCase());
+    data.key ??= camelize(data.slug);
     data.requiredRank ??= 0;
     data.actionType ??= 'A';
     if (data.icon) data.icon = 'systems/pf2e/icons/spells/' + data.icon + '.webp';
@@ -43,7 +43,8 @@ export class SkillAction {
   }
 
   get label() {
-    return game.i18n.localize(this.skill.label) + ': ' + this.pf2eItem.name;
+    const skillLabel = this.skill.label ? game.i18n.localize(this.skill.label) : this.skill.name;
+    return skillLabel + ': ' + this.pf2eItem.name;
   }
 
   get skill() {
@@ -154,12 +155,26 @@ export class SkillAction {
 
 export class SkillActionCollection extends Collection<SkillAction> {
   constructor(actor: Actor) {
-    super(
-      deepClone(SKILL_ACTIONS_DATA).map(function (row) {
-        const action = new SkillAction({ ...row, actor: actor });
-        return [action.key, action];
-      }),
-    );
+    const actions = deepClone(SKILL_ACTIONS_DATA).flatMap(function (row) {
+      if (row.proficiencyKey == 'lore') {
+        const skills = actor.data.data.skills;
+
+        return Object.keys(skills)
+          .filter((slug) => skills[slug].lore)
+          .map((slug) => {
+            return new SkillAction({
+              ...row,
+              proficiencyKey: slug,
+              key: camelize(`${row.slug}-${slug}`),
+              actor: actor,
+            });
+          });
+      } else {
+        return [new SkillAction({ ...row, actor: actor })];
+      }
+    });
+
+    super(actions.map((action) => [action.key, action]));
   }
 
   fromElement(el: HTMLElement) {

@@ -129,6 +129,11 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
     proficiencyKey: 'itm',
     icon: 'blind-ambition',
   },
+  // Lore
+  {
+    slug: 'recall-knowledge-lore',
+    proficiencyKey: 'lore',
+  },
   // Medicine
   {
     slug: 'administer-first-aid',
