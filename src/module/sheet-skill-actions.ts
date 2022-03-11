@@ -35,28 +35,24 @@ Hooks.once('ready', async () => {
   await ActionsIndex.instance.loadCompendium('pf2e.actionspf2e');
 });
 
-// Add any additional hooks if necessary
-Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) => {
-  if (app.actor.type !== 'character') return;
-
+async function renderActionsList(skillActions: SkillActionCollection, actor: Actor) {
   const tpl = 'modules/pf2e-sheet-skill-actions/templates/skill-actions.html';
+  const allVisible = Flag.get(actor, 'allVisible');
 
-  const skillActions = new SkillActionCollection(app.actor);
-  const allVisible = Flag.get(app.actor, 'allVisible');
   const skillData = skillActions
     .map((action) => action.getData({ allVisible }))
     .sort((a, b) => {
       return a.label > b.label ? 1 : -1;
     });
 
-  const skillActionHtml = $(await renderTemplate(tpl, { skills: skillData, allVisible: allVisible }));
-  const $items = skillActionHtml.find('li.item');
+  const $skillActions = $(await renderTemplate(tpl, { skills: skillData, allVisible: allVisible }));
+  const $items = $skillActions.find('li.item');
 
-  skillActionHtml.on('click', '.toggle-hidden-actions', function () {
-    Flag.set(app.actor, 'allVisible', !Flag.get(app.actor, 'allVisible'));
+  $skillActions.on('click', '.toggle-hidden-actions', function () {
+    Flag.set(actor, 'allVisible', !Flag.get(actor, 'allVisible'));
   });
 
-  skillActionHtml.on('input', 'input[name="filter"]', function (e) {
+  $skillActions.on('input', 'input[name="filter"]', function (e) {
     const filter = e.currentTarget.value.toLowerCase();
     $items.each(function () {
       const action = skillActions.fromElement(this);
@@ -77,6 +73,29 @@ Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) 
     action.update({ visible: !action.visible });
   });
 
-  const target = $(html).find('.actions-list.item-list.directory-list.strikes-list');
-  target.after(skillActionHtml);
+  return $skillActions;
+}
+
+// Add any additional hooks if necessary
+Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) => {
+  if (app.actor.type !== 'character') return;
+
+  const encounterActions = new SkillActionCollection();
+  const explorationActions = new SkillActionCollection();
+  const downtimeActions = new SkillActionCollection();
+
+  SkillActionCollection.allActionsFor(app.actor).forEach(function (action) {
+    if (action.hasTrait('downtime')) downtimeActions.add(action);
+    else if (action.hasTrait('exploration')) explorationActions.add(action);
+    else encounterActions.add(action);
+  });
+
+  const $encounter = await renderActionsList(encounterActions, app.actor);
+  html.find('.actions-list.item-list.directory-list.strikes-list').after($encounter);
+
+  const $exploration = await renderActionsList(explorationActions, app.actor);
+  html.find('[data-tab="exploration"] .actions-list.item-list.directory-list').before($exploration);
+
+  const $downtime = await renderActionsList(downtimeActions, app.actor);
+  html.find('[data-tab="downtime"] .actions-list.item-list.directory-list').before($downtime);
 });
