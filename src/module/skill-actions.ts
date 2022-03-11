@@ -107,19 +107,26 @@ export class SkillAction {
         }),
       );
     }
-
-    const rollAction = game.pf2e.actions[this.key];
-    if (rollAction) {
-      await rollAction({ event, modifiers, actors: [this.actor], ...variant.extra });
+    if (variant.assurance) {
+      await this.toChat(variant.assurance);
     } else {
-      await this.toChat();
-      await this.skill.roll({ event, modifiers, options: [`action:${this.slug}`] });
+      const rollAction = game.pf2e.actions[this.key];
+      if (rollAction) {
+        await rollAction({ event, modifiers, actors: [this.actor], ...variant.extra });
+      } else {
+        await this.toChat();
+        await this.skill.roll({ event, modifiers, options: [`action:${this.slug}`] });
+      }
     }
   }
 
-  async toChat() {
+  async toChat(assurance?: number) {
     const constructor = this.pf2eItem.constructor as ItemConstructor;
     const ownedItem = new constructor(this.pf2eItem.toJSON(), { parent: this.actor });
+    if (assurance) {
+      ownedItem.data.data.description.value =
+        ownedItem.data.data.description.value + `<hr /> <p><strong>Assurance</strong> : ${assurance}</p>`;
+    }
     await ownedItem.toChat();
   }
 
@@ -150,10 +157,19 @@ export class SkillAction {
         this.addMapVariant(map.map3);
       }
     }
+    if (this.actorHasItem('assurance-' + this.skill.name)) {
+      const assuranceTotal = 10 + this.skill.modifiers.find((m) => m.type === 'proficiency').modifier;
+      this.addAssuranceVariant(assuranceTotal);
+    }
   }
 
   private addMapVariant(map: number) {
     this.variants.push({ label: game.i18n.format('PF2E.MAPAbbreviationLabel', { penalty: map }), map: map });
+  }
+
+  private addAssuranceVariant(assuranceTotal: number) {
+    //Assurance has no i18n translation in system
+    this.variants.push({ label: 'Assurance : ' + assuranceTotal, assurance: assuranceTotal });
   }
 }
 
