@@ -44,7 +44,8 @@ export class SkillAction {
 
   get label() {
     const skillLabel = this.skill.label ? game.i18n.localize(this.skill.label) : this.skill.name;
-    return skillLabel + ': ' + this.pf2eItem.name;
+    const actionLabel = this.data.translation ? game.i18n.localize(this.data.translation) : this.pf2eItem.name;
+    return skillLabel + ': ' + actionLabel;
   }
 
   get skill() {
