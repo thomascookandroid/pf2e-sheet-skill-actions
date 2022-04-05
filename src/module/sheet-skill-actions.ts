@@ -35,6 +35,12 @@ Hooks.once('ready', async () => {
   await ActionsIndex.instance.loadCompendium('pf2e.actionspf2e');
 });
 
+Hooks.once('babele.ready', async () => {
+  //Reload actions to have translated actions
+  await ActionsIndex.instance.loadCompendium('pf2e.feats-srd');
+  await ActionsIndex.instance.loadCompendium('pf2e.actionspf2e');
+});
+
 async function renderActionsList(skillActions: SkillActionCollection, actor: Actor) {
   const tpl = 'modules/pf2e-sheet-skill-actions/templates/skill-actions.html';
   const allVisible = Flag.get(actor, 'allVisible');
