@@ -1,5 +1,13 @@
 {
   "SkillActions": {
-    "Title": "Skill Actions"
+    "Title": "Skill Actions",
+    "Settings": {
+      "Position": {
+        "name": "Skill Actions position",
+        "hint": "Position in the skill page; Top : right after Strikes, Bottom : At the end",
+        "top": "Top",
+        "bot": "Bottom"
+      }
+    }
   }
 }
