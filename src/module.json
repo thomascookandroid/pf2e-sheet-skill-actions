@@ -14,6 +14,18 @@
   "minimumCoreVersion": "0.8.9",
   "compatibleCoreVersion": "9",
   "esmodules": ["module/sheet-skill-actions.js"],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "fr",
+      "name": "Français",
+      "path": "lang/fr.json"
+    }
+  ],
   "url": "",
   "manifest": "",
   "download": "https://host/path/to/0.1.0.zip",
