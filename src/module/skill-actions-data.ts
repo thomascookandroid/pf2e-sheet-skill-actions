@@ -13,7 +13,7 @@ interface Variant {
 export interface SkillActionData {
   key: string;
   slug: string;
-  translation: string;
+  compendiumId: string;
   icon: string;
   proficiencyKey: string;
   requiredRank: Rank;
@@ -24,32 +24,33 @@ export interface SkillActionData {
 
 export type SkillActionDataParameters = PartialBy<
   SkillActionData,
-  'key' | 'actionType' | 'icon' | 'requiredRank' | 'translation'
+  'key' | 'actionType' | 'icon' | 'requiredRank' | 'compendiumId'
 >;
 
 export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   // Acrobatics
   {
     slug: 'balance',
-    translation: 'PF2E.Actions.Balance.Title',
+    compendiumId: 'M76ycLAqHoAgbcej',
     proficiencyKey: 'acr',
     icon: 'freedom-of-movement',
   },
   {
     slug: 'squeeze',
+    compendiumId: 'kMcV8e5EZUxa6evt',
     proficiencyKey: 'acr',
     actionType: '',
     requiredRank: 1,
   },
   {
     slug: 'tumble-through',
-    translation: 'PF2E.Actions.TumbleThrough.Title',
+    compendiumId: '21WIfSu7Xd7uKqV8',
     proficiencyKey: 'acr',
     icon: 'unimpeded-stride',
   },
   {
     slug: 'maneuver-in-flight',
-    translation: 'PF2E.Actions.ManeuverInFlight.Title',
+    compendiumId: 'Qf1ylAbdVi1rkc8M',
     proficiencyKey: 'acr',
     requiredRank: 1,
     icon: 'fleet-step',
@@ -57,12 +58,14 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   // Arcana
   {
     slug: 'borrow-an-arcane-spell',
+    compendiumId: 'OizxuPb44g3eHPFh',
     proficiencyKey: 'arc',
     actionType: '',
     requiredRank: 1,
   },
   {
     slug: 'decipher-writing',
+    compendiumId: 'd9gbpiQjChYDYA2L',
     key: 'decipherWritingArcana',
     proficiencyKey: 'arc',
     actionType: '',
@@ -70,6 +73,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'identify-magic',
+    compendiumId: 'eReSHVEPCsdkSL4G',
     key: 'identifyMagicArcana',
     proficiencyKey: 'arc',
     actionType: '',
@@ -77,6 +81,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'learn-a-spell',
+    compendiumId: 'Q5iIYCFdqJFM31GW',
     key: 'learnASpellArcana',
     proficiencyKey: 'arc',
     actionType: '',
@@ -84,76 +89,78 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'recall-knowledge-arcana',
-    translation: 'PF2E.RecallKnowledge.Label',
+    compendiumId: 'KygTSeDvsFoSO6HW',
     proficiencyKey: 'arc',
   },
   // Athletics
   {
     slug: 'climb',
-    translation: 'PF2E.Actions.Climb.Title',
+    compendiumId: 'pprgrYQ1QnIDGZiy',
     proficiencyKey: 'ath',
     icon: 'heroic-feat',
   },
   {
     slug: 'force-open',
-    translation: 'PF2E.Actions.ForceOpen.Title',
+    compendiumId: 'SjmKHgI7a5Z9JzBx',
     proficiencyKey: 'ath',
     icon: 'indestructibility',
   },
   {
     slug: 'disarm',
-    translation: 'PF2E.Actions.Disarm.Title',
+    compendiumId: 'Dt6B1slsBy8ipJu9',
     proficiencyKey: 'ath',
     requiredRank: 1,
     icon: 'perfect-strike',
   },
   {
     slug: 'grapple',
-    translation: 'PF2E.Actions.Grapple.Title',
+    compendiumId: 'PMbdMWc2QroouFGD',
     proficiencyKey: 'ath',
     icon: 'remove-fear',
   },
   {
     slug: 'high-jump',
-    translation: 'PF2E.Actions.HighJump.Title',
+    compendiumId: '2HJ4yuEFY1Cast4h',
     proficiencyKey: 'ath',
     actionType: 'D',
     icon: 'jump',
   },
   {
     slug: 'long-jump',
-    translation: 'PF2E.Actions.LongJump.Title',
+    compendiumId: 'JUvAvruz7yRQXfz2',
     proficiencyKey: 'ath',
     actionType: 'D',
     icon: 'longstrider',
   },
   {
     slug: 'shove',
-    translation: 'PF2E.Actions.Shove.Title',
+    compendiumId: '7blmbDrQFNfdT731',
     proficiencyKey: 'ath',
     icon: 'ki-strike',
   },
   {
     slug: 'swim',
-    translation: 'PF2E.Actions.Swim.Title',
+    compendiumId: 'c8TGiZ48ygoSPofx',
     proficiencyKey: 'ath',
     icon: 'waters-of-prediction',
   },
   {
     slug: 'trip',
-    translation: 'PF2E.Actions.Trip.Title',
+    compendiumId: 'ge56Lu1xXVFYUnLP',
     proficiencyKey: 'ath',
     icon: 'natures-enmity',
   },
   // Crafting
   {
     slug: 'craft',
+    compendiumId: 'rmwa3OyhTZ2i2AHl',
     proficiencyKey: 'cra',
     actionType: '',
     requiredRank: 1,
   },
   {
     slug: 'earn-income',
+    compendiumId: 'QyzlsLrqM0EEwd7j',
     key: 'earnIncomeCrafting',
     proficiencyKey: 'cra',
     actionType: '',
@@ -161,23 +168,26 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'identify-alchemy',
+    compendiumId: 'Q4kdWVOf2ztIBFg1',
     proficiencyKey: 'cra',
     actionType: '',
     requiredRank: 1,
   },
   {
     slug: 'recall-knowledge-crafting',
-    translation: 'PF2E.RecallKnowledge.Label',
+    compendiumId: 'B0Eu3EfwIa9kyDEA',
     proficiencyKey: 'cra',
   },
   {
     slug: 'repair',
+    compendiumId: 'bT3skovyLUtP22ME',
     proficiencyKey: 'cra',
     actionType: '',
   },
   // Deception
   {
     slug: 'create-a-diversion',
+    compendiumId: 'GkmbTGfg8KcgynOA',
     proficiencyKey: 'dec',
     variants: function () {
       return [
@@ -189,80 +199,91 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'feint',
-    translation: 'PF2E.Actions.Feint.Title',
+    compendiumId: 'QNAVeNKtHA0EUw4X',
     proficiencyKey: 'dec',
     requiredRank: 1,
     icon: 'delay-consequence',
   },
   {
     slug: 'impersonate',
+    compendiumId: 'AJstokjdG6iDjVjE',
     proficiencyKey: 'dec',
     actionType: '',
   },
   {
     slug: 'lie',
+    compendiumId: 'ewwCglB7XOPLUz72',
     proficiencyKey: 'dec',
     actionType: '',
   },
   // Diplomacy
   {
     slug: 'gather-information',
+    compendiumId: 'plBGdZhqq5JBl1D8',
     proficiencyKey: 'dip',
     actionType: '',
   },
   {
     slug: 'make-an-impression',
+    compendiumId: 'OX4fy22hQgUHDr0q',
     proficiencyKey: 'dip',
     actionType: '',
   },
   {
     slug: 'request',
-    translation: 'PF2E.Actions.Request.Title',
+    compendiumId: 'DCb62iCBrJXy0Ik6',
     proficiencyKey: 'dip',
     icon: 'cackle',
   },
   // Intimidation
   {
     slug: 'coerce',
+    compendiumId: 'tHCqgwjtQtzNqVvd',
     proficiencyKey: 'itm',
     actionType: '',
   },
   {
     slug: 'demoralize',
-    translation: 'PF2E.Actions.Demoralize.Title',
+    compendiumId: '2u915NdUyQan6uKF',
     proficiencyKey: 'itm',
     icon: 'blind-ambition',
   },
   // Lore
   {
     slug: 'earn-income',
+    compendiumId: 'QyzlsLrqM0EEwd7j',
     proficiencyKey: 'lore',
     actionType: '',
     requiredRank: 1,
   },
   {
     slug: 'recall-knowledge-lore',
+    compendiumId: '1OagaWtBpVXExToo',
     proficiencyKey: 'lore',
   },
   // Medicine
   {
     slug: 'administer-first-aid',
+    compendiumId: 'MHLuKy4nQO2Z4Am1',
     proficiencyKey: 'med',
     actionType: 'D',
   },
   {
     slug: 'treat-disease',
+    compendiumId: 'TC7OcDa7JlWbqMaN',
     proficiencyKey: 'med',
     actionType: '',
     requiredRank: 1,
   },
   {
     slug: 'treat-poison',
+    compendiumId: 'KjoCEEmPGTeFE4hh',
     proficiencyKey: 'med',
     requiredRank: 1,
   },
   {
     slug: 'treat-wounds',
+    compendiumId: '1kGNdIIhuglAjIp9',
     proficiencyKey: 'med',
     actionType: '',
     requiredRank: 1,
@@ -270,10 +291,12 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   // Nature
   {
     slug: 'command-an-animal',
+    compendiumId: 'q9nbyIF0PEBqMtYe',
     proficiencyKey: 'nat',
   },
   {
     slug: 'identify-magic',
+    compendiumId: 'eReSHVEPCsdkSL4G',
     key: 'identifyMagicNature',
     proficiencyKey: 'nat',
     actionType: '',
@@ -281,6 +304,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'learn-a-spell',
+    compendiumId: 'Q5iIYCFdqJFM31GW',
     key: 'learnASpellNature',
     proficiencyKey: 'nat',
     actionType: '',
@@ -288,12 +312,13 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'recall-knowledge-nature',
-    translation: 'PF2E.RecallKnowledge.Label',
+    compendiumId: 'eT1jXYvz2YH70Ovp',
     proficiencyKey: 'nat',
   },
   // Occultism
   {
     slug: 'decipher-writing',
+    compendiumId: 'd9gbpiQjChYDYA2L',
     key: 'decipherWritingOccultism',
     proficiencyKey: 'occ',
     actionType: '',
@@ -301,6 +326,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'identify-magic',
+    compendiumId: 'eReSHVEPCsdkSL4G',
     key: 'identifyMagicOccultism',
     proficiencyKey: 'occ',
     actionType: '',
@@ -308,6 +334,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'learn-a-spell',
+    compendiumId: 'Q5iIYCFdqJFM31GW',
     key: 'learnASpellOccultism',
     proficiencyKey: 'occ',
     actionType: '',
@@ -315,12 +342,13 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'recall-knowledge-occultism',
-    translation: 'PF2E.RecallKnowledge.Label',
+    compendiumId: 'B2BpIZFHoF9Kjzpx',
     proficiencyKey: 'occ',
   },
   // Performance
   {
     slug: 'earn-income',
+    compendiumId: 'QyzlsLrqM0EEwd7j',
     key: 'earnIncomePerformance',
     proficiencyKey: 'prf',
     actionType: '',
@@ -328,11 +356,13 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'perform',
+    compendiumId: 'EEDElIyin4z60PXx',
     proficiencyKey: 'prf',
   },
   // Religion
   {
     slug: 'decipher-writing',
+    compendiumId: 'd9gbpiQjChYDYA2L',
     key: 'decipherWritingReligion',
     proficiencyKey: 'rel',
     actionType: '',
@@ -340,6 +370,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'identify-magic',
+    compendiumId: 'eReSHVEPCsdkSL4G',
     key: 'identifyMagicReligion',
     proficiencyKey: 'rel',
     actionType: '',
@@ -347,6 +378,7 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'learn-a-spell',
+    compendiumId: 'Q5iIYCFdqJFM31GW',
     key: 'learnASpellReligion',
     proficiencyKey: 'rel',
     actionType: '',
@@ -354,18 +386,20 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'recall-knowledge-religion',
-    translation: 'PF2E.RecallKnowledge.Label',
+    compendiumId: 'LZgjpWd0pL3vK9Q1',
     proficiencyKey: 'rel',
   },
   // Society
   {
     slug: 'create-forgery',
+    compendiumId: 'ftG89SjTSa9DYDOD',
     proficiencyKey: 'soc',
     actionType: '',
     requiredRank: 1,
   },
   {
     slug: 'decipher-writing',
+    compendiumId: 'd9gbpiQjChYDYA2L',
     key: 'decipherWritingSociety',
     proficiencyKey: 'soc',
     actionType: '',
@@ -373,52 +407,58 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'subsist',
+    compendiumId: '49y9Ec4bDii8pcD3',
     key: 'subsistSociety',
     proficiencyKey: 'soc',
     actionType: '',
   },
   {
     slug: 'recall-knowledge-society',
-    translation: 'PF2E.RecallKnowledge.Label',
+    compendiumId: 'KUfLlXDWTcAWhl8l',
     proficiencyKey: 'soc',
   },
   // Stealth
   {
     slug: 'conceal-an-object',
+    compendiumId: 'qVNVSmsgpKFGk9hV',
     proficiencyKey: 'ste',
   },
   {
     slug: 'hide',
-    translation: 'PF2E.Actions.Hide.Title',
+    compendiumId: 'XMcnh4cSI32tljXa',
     proficiencyKey: 'ste',
     icon: 'zealous-conviction',
   },
   {
     slug: 'sneak',
-    translation: 'PF2E.Actions.Sneak.Title',
+    compendiumId: 'VMozDqMMuK5kpoX4',
     proficiencyKey: 'ste',
     icon: 'invisibility',
   },
   // Survival
   {
     slug: 'cover-tracks',
+    compendiumId: 'SB7cMECVtE06kByk',
     proficiencyKey: 'sur',
     actionType: '',
     requiredRank: 1,
   },
   {
     slug: 'sense-direction',
+    compendiumId: 'fJImDBQfqfjKJOhk',
     proficiencyKey: 'sur',
     actionType: '',
   },
   {
     slug: 'subsist',
+    compendiumId: '49y9Ec4bDii8pcD3',
     key: 'subsistSurvival',
     proficiencyKey: 'sur',
     actionType: '',
   },
   {
     slug: 'track',
+    compendiumId: 'EA5vuSgJfiHH7plD',
     proficiencyKey: 'sur',
     actionType: '',
     requiredRank: 1,
@@ -426,17 +466,19 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   // Thievery
   {
     slug: 'disable-device',
+    compendiumId: 'cYdz2grcOcRt4jk6',
     proficiencyKey: 'thi',
     requiredRank: 1,
     actionType: 'D',
   },
   {
     slug: 'palm-an-object',
+    compendiumId: 'ijZ0DDFpMkWqaShd',
     proficiencyKey: 'thi',
   },
   {
     slug: 'pick-a-lock',
-    translation: 'PF2E.Actions.PickALock.Title',
+    compendiumId: '2EE4aF4SZpYf0R6H',
     proficiencyKey: 'thi',
     requiredRank: 1,
     actionType: 'D',
@@ -444,12 +486,13 @@ export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   },
   {
     slug: 'steal',
+    compendiumId: 'RDXXE7wMrSPCLv5k',
     proficiencyKey: 'thi',
   },
   // Feat based
   {
     slug: 'bon-mot',
-    translation: 'PF2E.Actions.BonMot.Title',
+    compendiumId: '0GF2j54roPFIDmXf',
     proficiencyKey: 'dip',
     icon: 'hideous-laughter',
   },
