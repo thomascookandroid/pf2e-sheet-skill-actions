@@ -79,6 +79,10 @@ async function renderActionsList(skillActions: SkillActionCollection, actor: Act
     action.update({ visible: !action.visible });
   });
 
+  $items.on('click', '.action-name', function (e) {
+    skillActions.fromEvent(e).toggleItemSummary($(e.delegateTarget));
+  });
+
   return $skillActions;
 }
 
