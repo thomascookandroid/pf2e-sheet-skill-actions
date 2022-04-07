@@ -11,7 +11,7 @@
  */
 
 // Import TypeScript modules
-import { registerSettings } from './settings';
+import { registerSettings, getGame, SKILLS_ACTIONS_MODULE_NAME } from './settings';
 import { preloadTemplates } from './preloadTemplates';
 import { ActionsIndex } from './actions-index';
 import { Flag } from './utils';
@@ -97,11 +97,27 @@ Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) 
   });
 
   const $encounter = await renderActionsList(encounterActions, app.actor);
-  html.find('.actions-list.item-list.directory-list.strikes-list').after($encounter);
-
   const $exploration = await renderActionsList(explorationActions, app.actor);
-  html.find('[data-tab="exploration"] .actions-list.item-list.directory-list').before($exploration);
-
   const $downtime = await renderActionsList(downtimeActions, app.actor);
-  html.find('[data-tab="downtime"] .actions-list.item-list.directory-list').before($downtime);
+
+  switch (getGame().settings.get(SKILLS_ACTIONS_MODULE_NAME, 'Position')) {
+    case 'top': {
+      html.find('.actions-list.item-list.directory-list.strikes-list').after($encounter);
+      html.find('[data-tab="exploration"] .actions-list.item-list.directory-list').before($exploration);
+      html.find('[data-tab="downtime"] .actions-list.item-list.directory-list').before($downtime);
+      break;
+    }
+    case 'bot': {
+      html.find('.actions-panel.active').append($encounter);
+      html.find('[data-tab="exploration"] .actions-list.item-list.directory-list').after($exploration);
+      html.find('[data-tab="downtime"] .actions-list.item-list.directory-list').after($downtime);
+      break;
+    }
+    default: {
+      html.find('.actions-list.item-list.directory-list.strikes-list').after($encounter);
+      html.find('[data-tab="exploration"] .actions-list.item-list.directory-list').before($exploration);
+      html.find('[data-tab="downtime"] .actions-list.item-list.directory-list').before($downtime);
+      break;
+    }
+  }
 });

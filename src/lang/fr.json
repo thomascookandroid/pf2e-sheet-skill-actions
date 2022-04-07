@@ -1,5 +1,13 @@
 {
   "SkillActions": {
-    "Title": "Actions de Compétence"
+    "Title": "Actions de Compétence",
+    "Settings": {
+      "Position": {
+        "name": "Position des actions de compétence",
+        "hint": "Position dans la page des actions; Haut : juste après les frappes, Bas : en dernière position.",
+        "top": "Haut",
+        "bot": "Bas"
+      }
+    }
   }
 }
