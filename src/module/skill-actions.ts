@@ -131,6 +131,49 @@ export class SkillAction {
     await ownedItem.toChat();
   }
 
+  async toggleItemSummary($li: JQuery) {
+    // Toggle summary
+    if ($li.hasClass('expanded')) {
+      const $summary = $li.children('.item-summary');
+      $summary.slideUp(200, () => $summary.remove());
+    } else {
+      const $summary = $('<div class="item-summary">');
+      const chatData = this.pf2eItem.getChatData({ secrets: this.actor.isOwner }, $li.data());
+      this.renderItemSummary($summary, this.pf2eItem, chatData);
+      $li.children('.item-name, .item-controls, .action-header').last().after($summary);
+      $summary.hide().slideDown(200, () => {
+        //nothing to do
+      });
+    }
+    $li.toggleClass('expanded');
+  }
+
+  /**
+   * Called when an item summary is expanded and needs to be filled out.
+   */
+  renderItemSummary($div: JQuery, item: Embedded<ItemPF2e>, chatData: ItemSummaryData) {
+    // append traits (only style the tags if they contain description data)
+    const traitTags = Array.isArray(chatData.traits)
+      ? chatData.traits
+          .filter((trait) => !trait.excluded)
+          .map((trait) => {
+            const label: string = game.i18n.localize(trait.label);
+            const $trait = $(`<span class="tag">${label}</span>`);
+            if (trait.description) {
+              const description = game.i18n.localize(trait.description);
+              $trait
+                .attr({ title: description })
+                .tooltipster({ maxWidth: 400, theme: 'crb-hover', contentAsHTML: true });
+            }
+            return $trait;
+          })
+      : [];
+
+    const allTags = [...traitTags].filter((tag): tag is JQuery => !!tag);
+    const $properties = $('<div class="item-properties tags"></div>').append(...allTags);
+    $div.append($properties, `<div class="item-description">${chatData.description.value}</div>`);
+  }
+
   private actorHasItem(slug = this.data.slug) {
     return !!this.actor.items.find((item) => item.slug === slug);
   }
