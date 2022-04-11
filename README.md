@@ -1,4 +1,4 @@
-# sheet-skill-actions
+# pf2e-sheet-skill-actions
 
 This will add a number of skill actions to your stikes list to be more easily accessible to the player.
 

@@ -19,7 +19,7 @@ import { SkillActionCollection } from './skill-actions';
 
 // Initialize module
 Hooks.once('init', async () => {
-  console.log('sheet-skill-actions | Initializing sheet-skill-actions');
+  console.log('pf2e-sheet-skill-actions | Initializing pf2e-sheet-skill-actions');
 
   // Assign custom classes and constants here
 
