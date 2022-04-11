@@ -93,6 +93,10 @@ export class SkillAction {
     await Flag.set(this.actor, `actions.${this.key}`, data);
   }
 
+  async toggleVisibility(visible = !this.visible) {
+    await this.update({ visible: visible });
+  }
+
   async rollSkillAction(event) {
     if (!(game instanceof Game)) return;
 
@@ -250,5 +254,10 @@ export class SkillActionCollection extends Collection<SkillAction> {
 
   fromEvent(e: JQuery.TriggeredEvent) {
     return this.fromElement(e.delegateTarget);
+  }
+
+  toggleVisibility() {
+    const visible = !this.some((action) => action.visible);
+    this.forEach((action) => action.toggleVisibility(visible));
   }
 }

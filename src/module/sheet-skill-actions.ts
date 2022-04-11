@@ -55,8 +55,9 @@ function renderActionsList(skillActions: SkillActionCollection, actor: Actor) {
   const $skillActions = $(templates[0]({ skills: skillData, allVisible: allVisible }));
   const $items = $skillActions.find('li.item');
 
-  $skillActions.on('click', '.toggle-hidden-actions', function () {
-    Flag.set(actor, 'allVisible', !Flag.get(actor, 'allVisible'));
+  $skillActions.on('click', '.toggle-hidden-actions', function (e) {
+    if (e.altKey) skillActions.toggleVisibility();
+    else Flag.set(actor, 'allVisible', !Flag.get(actor, 'allVisible'));
   });
 
   $skillActions.on('input', 'input[name="filter"]', function (e) {
@@ -77,8 +78,7 @@ function renderActionsList(skillActions: SkillActionCollection, actor: Actor) {
 
   $items.on('click', '.item-toggle-equip', function (e) {
     e.stopPropagation();
-    const action = skillActions.fromEvent(e);
-    action.update({ visible: !action.visible });
+    skillActions.fromEvent(e).toggleVisibility();
   });
 
   $items.on('click', '.action-name', function (e) {
