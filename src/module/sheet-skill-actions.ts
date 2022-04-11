@@ -75,6 +75,7 @@ async function renderActionsList(skillActions: SkillActionCollection, actor: Act
   });
 
   $items.on('click', '.item-toggle-equip', function (e) {
+    e.stopPropagation();
     const action = skillActions.fromEvent(e);
     action.update({ visible: !action.visible });
   });
