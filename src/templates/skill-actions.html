@@ -21,8 +21,8 @@
         <div class="action-name" style="justify-content: space-between">
           <h4>{{label}} <span class="activity-icon">{{actionType}}</span></h4>
           <div class="action-options">
-            <a class="item-control item-toggle-equip {{#if visible}}active{{/if}}" title="Toggle action visibility">
-              <i class="fas fa-tshirt"></i>
+            <a class="item-control item-toggle-equip" title="Toggle action visibility">
+              <i class="fas fa-tshirt" {{#unless visible}}style="color: rgba(0, 0, 0, 0.4);"{{/unless}}></i>
             </a>
           </div>
         </div>
