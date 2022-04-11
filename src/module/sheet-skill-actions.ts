@@ -17,6 +17,8 @@ import { ActionsIndex } from './actions-index';
 import { Flag } from './utils';
 import { SkillActionCollection } from './skill-actions';
 
+let templates: Handlebars.TemplateDelegate[];
+
 // Initialize module
 Hooks.once('init', async () => {
   console.log('pf2e-sheet-skill-actions | Initializing pf2e-sheet-skill-actions');
@@ -27,7 +29,7 @@ Hooks.once('init', async () => {
   registerSettings();
 
   // Preload Handlebars templates
-  await preloadTemplates();
+  templates = await preloadTemplates();
 });
 
 Hooks.once('ready', async () => {
@@ -41,8 +43,7 @@ Hooks.once('babele.ready', async () => {
   await ActionsIndex.instance.loadCompendium('pf2e.actionspf2e');
 });
 
-async function renderActionsList(skillActions: SkillActionCollection, actor: Actor) {
-  const tpl = 'modules/pf2e-sheet-skill-actions/templates/skill-actions.html';
+function renderActionsList(skillActions: SkillActionCollection, actor: Actor) {
   const allVisible = Flag.get(actor, 'allVisible');
 
   const skillData = skillActions
@@ -51,7 +52,7 @@ async function renderActionsList(skillActions: SkillActionCollection, actor: Act
       return a.label > b.label ? 1 : -1;
     });
 
-  const $skillActions = $(await renderTemplate(tpl, { skills: skillData, allVisible: allVisible }));
+  const $skillActions = $(templates[0]({ skills: skillData, allVisible: allVisible }));
   const $items = $skillActions.find('li.item');
 
   $skillActions.on('click', '.toggle-hidden-actions', function () {
@@ -87,7 +88,7 @@ async function renderActionsList(skillActions: SkillActionCollection, actor: Act
 }
 
 // Add any additional hooks if necessary
-Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) => {
+Hooks.on('renderActorSheet', (app: ActorSheet, html: JQuery<HTMLElement>) => {
   if (app.actor.type !== 'character') return;
 
   const encounterActions = new SkillActionCollection();
@@ -100,9 +101,9 @@ Hooks.on('renderActorSheet', async (app: ActorSheet, html: JQuery<HTMLElement>) 
     else encounterActions.add(action);
   });
 
-  const $encounter = await renderActionsList(encounterActions, app.actor);
-  const $exploration = await renderActionsList(explorationActions, app.actor);
-  const $downtime = await renderActionsList(downtimeActions, app.actor);
+  const $encounter = renderActionsList(encounterActions, app.actor);
+  const $exploration = renderActionsList(explorationActions, app.actor);
+  const $downtime = renderActionsList(downtimeActions, app.actor);
 
   switch (getGame().settings.get(SKILLS_ACTIONS_MODULE_NAME, 'Position')) {
     case 'top': {
