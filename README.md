@@ -17,6 +17,7 @@ I love you.
 * Go to https://github.com/jamespdaily/pf2e-sheet-skill-actions/edit/master/src/module/skill-actions-data.ts
 * Find a section relevant for your action and add JSON for your action. Keys explained:
   * **slug** (required) - slug to match PF2e action item in compendium. To get the slug: find the name of the action/feat in PF2e compendium, remove "'" and "`" characters, replace anything that's not a letter or number with "-" and downcase everything.
+  * **compendiumID** (required) - ID of the action or feat in the compendium. You can drag and drop the action in a jounal to find the link generated (like @Compendium[pf2e.actionspf2e.S9PZFOVe7zhORkUc]).
   * **proficiencyKey** (required) - 3 letter acronym for the skill in PF2e (`acr`, `arc`, `ath`, `cra`, `dec`, `dip`, `itm`, `med`, `nat`, `occ`, `prf`, `rel`, `soc`, `ste`, `sur`, `thi`)
   * **icon** - name of icon in `[FOUNDRY DATA]/Data/systems/pf2e/icons/spells` to use.
   * **requiredRank** - add action requires training in skill. 0 - untrained (default), 1 - trained, 2 - expert, 3 - master, 4 - legendary.
