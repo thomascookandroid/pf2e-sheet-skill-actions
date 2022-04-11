@@ -1,4 +1,4 @@
-export const SKILLS_ACTIONS_MODULE_NAME = 'SkillActions';
+export const SKILLS_ACTIONS_MODULE_NAME = 'pf2e-sheet-skill-actions';
 
 /**
  * Because typescript doesn't know when in the lifecycle of foundry your code runs, we have to assume that the
