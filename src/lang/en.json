@@ -8,6 +8,9 @@
         "top": "Top",
         "bot": "Bottom"
       }
+    },
+    "UnequipAll": {
+      "Tooltip": "Toggle hidden actions. Hold alt when clicking to make unequip/equip all skills."
     }
   }
 }
