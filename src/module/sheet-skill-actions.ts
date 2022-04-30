@@ -11,10 +11,10 @@
  */
 
 // Import TypeScript modules
-import { registerSettings, getGame, SKILLS_ACTIONS_MODULE_NAME } from './settings';
+import { registerSettings, SKILLS_ACTIONS_MODULE_NAME } from './settings';
 import { preloadTemplates } from './preloadTemplates';
 import { ActionsIndex } from './actions-index';
-import { Flag } from './utils';
+import { Flag, getGame } from './utils';
 import { SkillActionCollection } from './skill-actions';
 
 let templates: Handlebars.TemplateDelegate[];

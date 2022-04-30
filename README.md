@@ -20,8 +20,11 @@ I love you.
   * **compendiumID** (required) - ID of the action or feat in the compendium. You can drag and drop the action in a jounal to find the link generated (like @Compendium[pf2e.actionspf2e.S9PZFOVe7zhORkUc]).
   * **proficiencyKey** (required) - 3 letter acronym for the skill in PF2e (`acr`, `arc`, `ath`, `cra`, `dec`, `dip`, `itm`, `med`, `nat`, `occ`, `prf`, `rel`, `soc`, `ste`, `sur`, `thi`)
   * **icon** - name of icon in `[FOUNDRY DATA]/Data/systems/pf2e/icons/spells` to use.
-  * **requiredRank** - add action requires training in skill. 0 - untrained (default), 1 - trained, 2 - expert, 3 - master, 4 - legendary.
   * **actionType** - add if this does not use 1 action. 'A' - 1 action (default), 'D' - 2 actions, 'T' - 3 actions, 'F' - free action, 'R' - reaction.
   * **key** - is used to match action implemented by PF2e. You shouldn't need to specify it.
-  * **variants** - an array of variants to the action in case you want more than one button. MAP variants are added automatically.
+  * **variants** - an array of variants, each of which will create a separate button. MAP & assurance variants are added automatically. Each entry can have:
+    * **proficiencyKey** (required) - 3 letter acronym for the skill in PF2e (`acr`, `arc`, `ath`, `cra`, `dec`, `dip`, `itm`, `med`, `nat`, `occ`, `prf`, `rel`, `soc`, `ste`, `sur`, `thi`)
+    * **label** - a label in case you don't want to use the default "[Skill]"
+    * **requiredRank** - add if variant requires training in skill. 0 - untrained (default), 1 - trained, 2 - expert, 3 - master, 4 - legendary.
+    * **extra** - any extra parameters that are passed to pf2e actions.
 * Click "Propose changes" and "Create pull request".

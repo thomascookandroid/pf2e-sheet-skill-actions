@@ -2,10 +2,10 @@
 // @ts-nocheck
 
 import { ActionsIndex } from './actions-index';
-import { camelize, Flag } from './utils';
-import { ModifierPF2e } from './pf2e';
+import { camelize, Flag, getGame } from './utils';
 import { ActionType, SKILL_ACTIONS_DATA, SkillActionData, SkillActionDataParameters } from './skill-actions-data';
-import { ItemConstructor } from './globals';
+import { ItemConstructor, ItemPF2e } from './globals';
+import { VariantsCollection } from './variants';
 
 const ACTION_ICONS: Record<ActionType, string> = {
   A: 'OneAction',
@@ -25,13 +25,15 @@ export class SkillAction {
 
   constructor(data: SkillActionDataParameters) {
     data.key ??= camelize(data.slug);
-    data.requiredRank ??= 0;
     data.actionType ??= 'A';
     if (data.icon) data.icon = 'systems/pf2e/icons/spells/' + data.icon + '.webp';
     else data.icon = 'systems/pf2e/icons/actions/' + ACTION_ICONS[data.actionType] + '.webp';
     this.data = data;
 
-    this.buildVariants();
+    this.variants = new VariantsCollection();
+    data.variants.forEach(function (variantData) {
+      this.buildVariants(variantData);
+    }, this);
   }
 
   get actor() {
@@ -43,26 +45,20 @@ export class SkillAction {
   }
 
   get label() {
-    const skillLabel = this.skill.label ? game.i18n.localize(this.skill.label) : this.skill.name;
-    const actionLabel = this.data.translation ? game.i18n.localize(this.data.translation) : this.pf2eItem.name;
-    return skillLabel + ': ' + actionLabel;
-  }
-
-  get skill() {
-    return this.actor.data.data.skills[this.data.proficiencyKey];
+    return this.data.translation ? game.i18n.localize(this.data.translation) : this.pf2eItem.name;
   }
 
   get visible() {
     return this.actorData?.visible ?? true;
   }
 
-  get pf2eItem() {
+  get pf2eItem(): ItemPF2e {
     return ActionsIndex.instance.get(this.data.slug);
   }
 
   isDisplayed(filter: string, allVisible: boolean) {
     if (filter) {
-      return this.label.toLowerCase().includes(filter);
+      return this.label.toLowerCase().includes(filter) || this.variants.matchFilter(filter);
     } else {
       return this.visible || allVisible;
     }
@@ -73,7 +69,7 @@ export class SkillAction {
   }
 
   getData({ allVisible }: { allVisible: boolean }) {
-    const enabled = this.hasSkillRank() && (this.pf2eItem.type !== 'feat' || this.actorHasItem());
+    const enabled = this.variants.length > 0 && (this.pf2eItem.type !== 'feat' || this.actorHasItem());
 
     return {
       ...this.data,
@@ -98,29 +94,17 @@ export class SkillAction {
   }
 
   async rollSkillAction(event) {
-    if (!(game instanceof Game)) return;
-
-    const modifiers = [];
     const variant = this.variants[parseInt(event.currentTarget.dataset.variant)];
 
-    if (variant.map) {
-      modifiers.push(
-        new ModifierPF2e({
-          label: game.i18n.localize('PF2E.MultipleAttackPenalty'),
-          modifier: variant.map,
-          type: 'untyped',
-        }),
-      );
-    }
-    if (variant.assurance) {
-      await this.toChat(variant.assurance);
+    if (variant.assuranceTotal) {
+      await this.toChat(variant.assuranceTotal);
     } else {
-      const rollAction = game.pf2e.actions[this.key];
+      const rollAction = getGame().pf2e.actions[this.key];
       if (rollAction) {
-        await rollAction({ event, modifiers, actors: [this.actor], ...variant.extra });
+        await rollAction({ event, modifiers: variant.modifiers, actors: [this.actor], ...variant.extra });
       } else {
         await this.toChat();
-        await this.skill.roll({ event, modifiers, options: [`action:${this.slug}`] });
+        await variant.skill.roll({ event, modifiers: variant.modifiers, options: [`action:${this.slug}`] });
       }
     }
   }
@@ -182,65 +166,39 @@ export class SkillAction {
     return !!this.actor.items.find((item) => item.slug === slug);
   }
 
-  private hasSkillRank() {
-    return (
-      this.skill.rank >= this.data.requiredRank ||
-      (this.data.requiredRank === 1 && this.actorHasItem('clever-improviser'))
-    );
+  private getSkills(proficiencyKey: string) {
+    const skills = this.actor.data.data.skills;
+    if (proficiencyKey == 'lore') {
+      return Object.values(skills).filter((skill) => skill.lore);
+    } else {
+      return [skills[proficiencyKey]];
+    }
   }
 
-  private buildVariants() {
-    const modifier = (this.skill.value >= 0 ? ' +' : ' ') + this.skill.value;
+  private buildVariants(data) {
+    this.getSkills(data.proficiencyKey).forEach((skill) => {
+      const requiredRank = data.requiredRank ?? 0;
+      const hasRank = skill.rank >= requiredRank || (requiredRank === 1 && this.actorHasItem('clever-improviser'));
+      if (!hasRank) return;
 
-    if (this.data.variants) {
-      this.variants = this.data.variants.call(this).map(function (variant) {
-        return { ...variant, label: `${variant.label} ${modifier}` };
-      });
-    } else {
-      this.variants = [{ label: `Roll ${modifier}`, map: 0 }];
+      this.variants.addBasicVariant(skill, data.extra, data.label);
 
       if (this.hasTrait('attack')) {
         const map = this.pf2eItem.calculateMap();
-        this.addMapVariant(map.map2);
-        this.addMapVariant(map.map3);
+        this.variants.addMapVariant(skill, data.extra, map.map2);
+        this.variants.addMapVariant(skill, data.extra, map.map3);
       }
-    }
-    if (this.actorHasItem('assurance-' + this.skill.name)) {
-      const assuranceTotal = 10 + this.skill.modifiers.find((m) => m.type === 'proficiency').modifier;
-      this.addAssuranceVariant(assuranceTotal);
-    }
-  }
 
-  private addMapVariant(map: number) {
-    this.variants.push({ label: game.i18n.format('PF2E.MAPAbbreviationLabel', { penalty: map }), map: map });
-  }
-
-  private addAssuranceVariant(assuranceTotal: number) {
-    //Assurance has no i18n translation in system
-    this.variants.push({ label: 'Assurance : ' + assuranceTotal, assurance: assuranceTotal });
+      if (this.actorHasItem('assurance-' + skill.name)) {
+        this.variants.addAssuranceVariant(skill, data.extra);
+      }
+    });
   }
 }
 
 export class SkillActionCollection extends Collection<SkillAction> {
-  static allActionsFor(actor) {
-    return deepClone(SKILL_ACTIONS_DATA).flatMap(function (row) {
-      if (row.proficiencyKey == 'lore') {
-        const skills = actor.data.data.skills;
-
-        return Object.keys(skills)
-          .filter((slug) => skills[slug].lore)
-          .map((slug) => {
-            return new SkillAction({
-              ...row,
-              proficiencyKey: slug,
-              key: camelize(`${row.slug}-${slug}`),
-              actor: actor,
-            });
-          });
-      } else {
-        return [new SkillAction({ ...row, actor: actor })];
-      }
-    });
+  static allActionsFor(actor): SkillAction[] {
+    return deepClone(SKILL_ACTIONS_DATA).map((row) => new SkillAction({ ...row, actor: actor }));
   }
 
   add(action: SkillAction) {

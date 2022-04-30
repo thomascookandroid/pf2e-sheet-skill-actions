@@ -3,11 +3,11 @@ import { Rank } from './globals';
 
 export type ActionType = 'A' | 'D' | 'T' | 'F' | 'R' | '';
 
-interface Variant {
-  label: string;
-  map?: number;
+export interface VariantData {
+  label?: string;
+  proficiencyKey: string;
   extra?: Record<string, unknown>;
-  assurance?: number;
+  requiredRank?: Rank;
 }
 
 export interface SkillActionData {
@@ -15,485 +15,356 @@ export interface SkillActionData {
   slug: string;
   compendiumId: string;
   icon: string;
-  proficiencyKey: string;
-  requiredRank: Rank;
   actionType: ActionType;
-  variants?: () => Variant[];
+  variants: VariantData[];
   actor: Actor;
 }
 
-export type SkillActionDataParameters = PartialBy<
-  SkillActionData,
-  'key' | 'actionType' | 'icon' | 'requiredRank' | 'compendiumId'
->;
+export type SkillActionDataParameters = PartialBy<SkillActionData, 'key' | 'actionType' | 'icon' | 'compendiumId'>;
 
 export const SKILL_ACTIONS_DATA: Omit<SkillActionDataParameters, 'actor'>[] = [
   // Acrobatics
   {
     slug: 'balance',
     compendiumId: 'M76ycLAqHoAgbcej',
-    proficiencyKey: 'acr',
     icon: 'freedom-of-movement',
+    variants: [{ proficiencyKey: 'acr' }],
   },
   {
     slug: 'squeeze',
     compendiumId: 'kMcV8e5EZUxa6evt',
-    proficiencyKey: 'acr',
     actionType: '',
-    requiredRank: 1,
+    variants: [{ proficiencyKey: 'acr', requiredRank: 1 }],
   },
   {
     slug: 'tumble-through',
     compendiumId: '21WIfSu7Xd7uKqV8',
-    proficiencyKey: 'acr',
     icon: 'unimpeded-stride',
+    variants: [{ proficiencyKey: 'acr' }],
   },
   {
     slug: 'maneuver-in-flight',
     compendiumId: 'Qf1ylAbdVi1rkc8M',
-    proficiencyKey: 'acr',
-    requiredRank: 1,
     icon: 'fleet-step',
+    variants: [{ proficiencyKey: 'acr', requiredRank: 1 }],
   },
   // Arcana
   {
     slug: 'borrow-an-arcane-spell',
     compendiumId: 'OizxuPb44g3eHPFh',
-    proficiencyKey: 'arc',
     actionType: '',
-    requiredRank: 1,
+    variants: [{ proficiencyKey: 'arc', requiredRank: 1 }],
   },
   {
     slug: 'decipher-writing',
     compendiumId: 'd9gbpiQjChYDYA2L',
-    key: 'decipherWritingArcana',
-    proficiencyKey: 'arc',
     actionType: '',
-    requiredRank: 1,
+    variants: [
+      { proficiencyKey: 'arc', requiredRank: 1 },
+      { proficiencyKey: 'occ', requiredRank: 1 },
+      { proficiencyKey: 'rel', requiredRank: 1 },
+      { proficiencyKey: 'soc', requiredRank: 1 },
+    ],
   },
   {
     slug: 'identify-magic',
     compendiumId: 'eReSHVEPCsdkSL4G',
-    key: 'identifyMagicArcana',
-    proficiencyKey: 'arc',
     actionType: '',
-    requiredRank: 1,
+    variants: [
+      { proficiencyKey: 'arc', requiredRank: 1 },
+      { proficiencyKey: 'nat', requiredRank: 1 },
+      { proficiencyKey: 'occ', requiredRank: 1 },
+      { proficiencyKey: 'rel', requiredRank: 1 },
+    ],
   },
   {
     slug: 'learn-a-spell',
     compendiumId: 'Q5iIYCFdqJFM31GW',
-    key: 'learnASpellArcana',
-    proficiencyKey: 'arc',
     actionType: '',
-    requiredRank: 1,
+    variants: [
+      { proficiencyKey: 'arc', requiredRank: 1 },
+      { proficiencyKey: 'nat', requiredRank: 1 },
+      { proficiencyKey: 'occ', requiredRank: 1 },
+      { proficiencyKey: 'rel', requiredRank: 1 },
+    ],
   },
   {
-    slug: 'recall-knowledge-arcana',
-    compendiumId: 'KygTSeDvsFoSO6HW',
-    proficiencyKey: 'arc',
+    slug: 'recall-knowledge-lore',
+    compendiumId: '1OagaWtBpVXExToo',
+    variants: [
+      { proficiencyKey: 'arc' },
+      { proficiencyKey: 'cra' },
+      { proficiencyKey: 'nat' },
+      { proficiencyKey: 'occ' },
+      { proficiencyKey: 'rel' },
+      { proficiencyKey: 'soc' },
+      { proficiencyKey: 'lore' },
+    ],
   },
   // Athletics
   {
     slug: 'climb',
     compendiumId: 'pprgrYQ1QnIDGZiy',
-    proficiencyKey: 'ath',
     icon: 'heroic-feat',
+    variants: [{ proficiencyKey: 'ath' }],
   },
   {
     slug: 'force-open',
     compendiumId: 'SjmKHgI7a5Z9JzBx',
-    proficiencyKey: 'ath',
     icon: 'indestructibility',
+    variants: [{ proficiencyKey: 'ath' }],
   },
   {
     slug: 'disarm',
     compendiumId: 'Dt6B1slsBy8ipJu9',
-    proficiencyKey: 'ath',
-    requiredRank: 1,
     icon: 'perfect-strike',
+    variants: [{ proficiencyKey: 'ath', requiredRank: 1 }],
   },
   {
     slug: 'grapple',
     compendiumId: 'PMbdMWc2QroouFGD',
-    proficiencyKey: 'ath',
     icon: 'remove-fear',
+    variants: [{ proficiencyKey: 'ath' }],
   },
   {
     slug: 'high-jump',
     compendiumId: '2HJ4yuEFY1Cast4h',
-    proficiencyKey: 'ath',
     actionType: 'D',
     icon: 'jump',
+    variants: [{ proficiencyKey: 'ath' }],
   },
   {
     slug: 'long-jump',
     compendiumId: 'JUvAvruz7yRQXfz2',
-    proficiencyKey: 'ath',
     actionType: 'D',
     icon: 'longstrider',
+    variants: [{ proficiencyKey: 'ath' }],
   },
   {
     slug: 'shove',
     compendiumId: '7blmbDrQFNfdT731',
-    proficiencyKey: 'ath',
     icon: 'ki-strike',
+    variants: [{ proficiencyKey: 'ath' }],
   },
   {
     slug: 'swim',
     compendiumId: 'c8TGiZ48ygoSPofx',
-    proficiencyKey: 'ath',
     icon: 'waters-of-prediction',
+    variants: [{ proficiencyKey: 'ath' }],
   },
   {
     slug: 'trip',
     compendiumId: 'ge56Lu1xXVFYUnLP',
-    proficiencyKey: 'ath',
     icon: 'natures-enmity',
+    variants: [{ proficiencyKey: 'ath' }],
   },
   // Crafting
   {
     slug: 'craft',
     compendiumId: 'rmwa3OyhTZ2i2AHl',
-    proficiencyKey: 'cra',
     actionType: '',
-    requiredRank: 1,
+    variants: [{ proficiencyKey: 'cra', requiredRank: 1 }],
   },
   {
     slug: 'earn-income',
     compendiumId: 'QyzlsLrqM0EEwd7j',
-    key: 'earnIncomeCrafting',
-    proficiencyKey: 'cra',
     actionType: '',
-    requiredRank: 1,
+    variants: [
+      { proficiencyKey: 'cra', requiredRank: 1 },
+      { proficiencyKey: 'lore', requiredRank: 1 },
+      { proficiencyKey: 'prf', requiredRank: 1 },
+    ],
   },
   {
     slug: 'identify-alchemy',
     compendiumId: 'Q4kdWVOf2ztIBFg1',
-    proficiencyKey: 'cra',
     actionType: '',
-    requiredRank: 1,
-  },
-  {
-    slug: 'recall-knowledge-crafting',
-    compendiumId: 'B0Eu3EfwIa9kyDEA',
-    proficiencyKey: 'cra',
+    variants: [{ proficiencyKey: 'cra', requiredRank: 1 }],
   },
   {
     slug: 'repair',
     compendiumId: 'bT3skovyLUtP22ME',
-    proficiencyKey: 'cra',
     actionType: '',
+    variants: [{ proficiencyKey: 'cra' }],
   },
   // Deception
   {
     slug: 'create-a-diversion',
     compendiumId: 'GkmbTGfg8KcgynOA',
-    proficiencyKey: 'dec',
-    variants: function () {
-      return [
-        { label: 'Distracting Words', extra: { variant: 'distracting-words' } },
-        { label: 'Gesture', extra: { variant: 'gesture' } },
-        { label: 'Trick', extra: { variant: 'trick' } },
-      ];
-    },
+    variants: [
+      { label: 'Distracting Words', proficiencyKey: 'dec', extra: { variant: 'distracting-words' } },
+      { label: 'Gesture', proficiencyKey: 'dec', extra: { variant: 'gesture' } },
+      { label: 'Trick', proficiencyKey: 'dec', extra: { variant: 'trick' } },
+    ],
   },
   {
     slug: 'feint',
     compendiumId: 'QNAVeNKtHA0EUw4X',
-    proficiencyKey: 'dec',
-    requiredRank: 1,
     icon: 'delay-consequence',
+    variants: [{ proficiencyKey: 'dec', requiredRank: 1 }],
   },
   {
     slug: 'impersonate',
     compendiumId: 'AJstokjdG6iDjVjE',
-    proficiencyKey: 'dec',
     actionType: '',
+    variants: [{ proficiencyKey: 'dec' }],
   },
   {
     slug: 'lie',
     compendiumId: 'ewwCglB7XOPLUz72',
-    proficiencyKey: 'dec',
     actionType: '',
+    variants: [{ proficiencyKey: 'dec' }],
   },
   // Diplomacy
   {
     slug: 'gather-information',
     compendiumId: 'plBGdZhqq5JBl1D8',
-    proficiencyKey: 'dip',
     actionType: '',
+    variants: [{ proficiencyKey: 'dip' }],
   },
   {
     slug: 'make-an-impression',
     compendiumId: 'OX4fy22hQgUHDr0q',
-    proficiencyKey: 'dip',
     actionType: '',
+    variants: [{ proficiencyKey: 'dip' }],
   },
   {
     slug: 'request',
     compendiumId: 'DCb62iCBrJXy0Ik6',
-    proficiencyKey: 'dip',
     icon: 'cackle',
+    variants: [{ proficiencyKey: 'dip' }],
   },
   // Intimidation
   {
     slug: 'coerce',
     compendiumId: 'tHCqgwjtQtzNqVvd',
-    proficiencyKey: 'itm',
     actionType: '',
+    variants: [{ proficiencyKey: 'itm' }],
   },
   {
     slug: 'demoralize',
     compendiumId: '2u915NdUyQan6uKF',
-    proficiencyKey: 'itm',
     icon: 'blind-ambition',
+    variants: [{ proficiencyKey: 'itm' }],
   },
   // Lore
-  {
-    slug: 'earn-income',
-    compendiumId: 'QyzlsLrqM0EEwd7j',
-    proficiencyKey: 'lore',
-    actionType: '',
-    requiredRank: 1,
-  },
-  {
-    slug: 'recall-knowledge-lore',
-    compendiumId: '1OagaWtBpVXExToo',
-    proficiencyKey: 'lore',
-  },
   // Medicine
   {
     slug: 'administer-first-aid',
     compendiumId: 'MHLuKy4nQO2Z4Am1',
-    proficiencyKey: 'med',
     actionType: 'D',
+    variants: [{ proficiencyKey: 'med' }],
   },
   {
     slug: 'treat-disease',
     compendiumId: 'TC7OcDa7JlWbqMaN',
-    proficiencyKey: 'med',
     actionType: '',
-    requiredRank: 1,
+    variants: [{ proficiencyKey: 'med', requiredRank: 1 }],
   },
   {
     slug: 'treat-poison',
     compendiumId: 'KjoCEEmPGTeFE4hh',
-    proficiencyKey: 'med',
-    requiredRank: 1,
+    variants: [{ proficiencyKey: 'med', requiredRank: 1 }],
   },
   {
     slug: 'treat-wounds',
     compendiumId: '1kGNdIIhuglAjIp9',
-    proficiencyKey: 'med',
     actionType: '',
-    requiredRank: 1,
+    variants: [{ proficiencyKey: 'med', requiredRank: 1 }],
   },
   // Nature
   {
     slug: 'command-an-animal',
     compendiumId: 'q9nbyIF0PEBqMtYe',
-    proficiencyKey: 'nat',
-  },
-  {
-    slug: 'identify-magic',
-    compendiumId: 'eReSHVEPCsdkSL4G',
-    key: 'identifyMagicNature',
-    proficiencyKey: 'nat',
-    actionType: '',
-    requiredRank: 1,
-  },
-  {
-    slug: 'learn-a-spell',
-    compendiumId: 'Q5iIYCFdqJFM31GW',
-    key: 'learnASpellNature',
-    proficiencyKey: 'nat',
-    actionType: '',
-    requiredRank: 1,
-  },
-  {
-    slug: 'recall-knowledge-nature',
-    compendiumId: 'eT1jXYvz2YH70Ovp',
-    proficiencyKey: 'nat',
+    variants: [{ proficiencyKey: 'nat' }],
   },
   // Occultism
-  {
-    slug: 'decipher-writing',
-    compendiumId: 'd9gbpiQjChYDYA2L',
-    key: 'decipherWritingOccultism',
-    proficiencyKey: 'occ',
-    actionType: '',
-    requiredRank: 1,
-  },
-  {
-    slug: 'identify-magic',
-    compendiumId: 'eReSHVEPCsdkSL4G',
-    key: 'identifyMagicOccultism',
-    proficiencyKey: 'occ',
-    actionType: '',
-    requiredRank: 1,
-  },
-  {
-    slug: 'learn-a-spell',
-    compendiumId: 'Q5iIYCFdqJFM31GW',
-    key: 'learnASpellOccultism',
-    proficiencyKey: 'occ',
-    actionType: '',
-    requiredRank: 1,
-  },
-  {
-    slug: 'recall-knowledge-occultism',
-    compendiumId: 'B2BpIZFHoF9Kjzpx',
-    proficiencyKey: 'occ',
-  },
   // Performance
-  {
-    slug: 'earn-income',
-    compendiumId: 'QyzlsLrqM0EEwd7j',
-    key: 'earnIncomePerformance',
-    proficiencyKey: 'prf',
-    actionType: '',
-    requiredRank: 1,
-  },
   {
     slug: 'perform',
     compendiumId: 'EEDElIyin4z60PXx',
-    proficiencyKey: 'prf',
+    variants: [{ proficiencyKey: 'prf' }],
   },
   // Religion
-  {
-    slug: 'decipher-writing',
-    compendiumId: 'd9gbpiQjChYDYA2L',
-    key: 'decipherWritingReligion',
-    proficiencyKey: 'rel',
-    actionType: '',
-    requiredRank: 1,
-  },
-  {
-    slug: 'identify-magic',
-    compendiumId: 'eReSHVEPCsdkSL4G',
-    key: 'identifyMagicReligion',
-    proficiencyKey: 'rel',
-    actionType: '',
-    requiredRank: 1,
-  },
-  {
-    slug: 'learn-a-spell',
-    compendiumId: 'Q5iIYCFdqJFM31GW',
-    key: 'learnASpellReligion',
-    proficiencyKey: 'rel',
-    actionType: '',
-    requiredRank: 1,
-  },
-  {
-    slug: 'recall-knowledge-religion',
-    compendiumId: 'LZgjpWd0pL3vK9Q1',
-    proficiencyKey: 'rel',
-  },
   // Society
   {
     slug: 'create-forgery',
     compendiumId: 'ftG89SjTSa9DYDOD',
-    proficiencyKey: 'soc',
     actionType: '',
-    requiredRank: 1,
-  },
-  {
-    slug: 'decipher-writing',
-    compendiumId: 'd9gbpiQjChYDYA2L',
-    key: 'decipherWritingSociety',
-    proficiencyKey: 'soc',
-    actionType: '',
-    requiredRank: 1,
+    variants: [{ proficiencyKey: 'soc', requiredRank: 1 }],
   },
   {
     slug: 'subsist',
     compendiumId: '49y9Ec4bDii8pcD3',
-    key: 'subsistSociety',
-    proficiencyKey: 'soc',
     actionType: '',
-  },
-  {
-    slug: 'recall-knowledge-society',
-    compendiumId: 'KUfLlXDWTcAWhl8l',
-    proficiencyKey: 'soc',
+    variants: [{ proficiencyKey: 'soc' }, { proficiencyKey: 'sur' }],
   },
   // Stealth
   {
     slug: 'conceal-an-object',
     compendiumId: 'qVNVSmsgpKFGk9hV',
-    proficiencyKey: 'ste',
+    variants: [{ proficiencyKey: 'ste' }],
   },
   {
     slug: 'hide',
     compendiumId: 'XMcnh4cSI32tljXa',
-    proficiencyKey: 'ste',
     icon: 'zealous-conviction',
+    variants: [{ proficiencyKey: 'ste' }],
   },
   {
     slug: 'sneak',
     compendiumId: 'VMozDqMMuK5kpoX4',
-    proficiencyKey: 'ste',
     icon: 'invisibility',
+    variants: [{ proficiencyKey: 'ste' }],
   },
   // Survival
   {
     slug: 'cover-tracks',
     compendiumId: 'SB7cMECVtE06kByk',
-    proficiencyKey: 'sur',
     actionType: '',
-    requiredRank: 1,
+    variants: [{ proficiencyKey: 'sur', requiredRank: 1 }],
   },
   {
     slug: 'sense-direction',
     compendiumId: 'fJImDBQfqfjKJOhk',
-    proficiencyKey: 'sur',
     actionType: '',
-  },
-  {
-    slug: 'subsist',
-    compendiumId: '49y9Ec4bDii8pcD3',
-    key: 'subsistSurvival',
-    proficiencyKey: 'sur',
-    actionType: '',
+    variants: [{ proficiencyKey: 'sur' }],
   },
   {
     slug: 'track',
     compendiumId: 'EA5vuSgJfiHH7plD',
-    proficiencyKey: 'sur',
     actionType: '',
-    requiredRank: 1,
+    variants: [{ proficiencyKey: 'sur', requiredRank: 1 }],
   },
   // Thievery
   {
     slug: 'disable-device',
     compendiumId: 'cYdz2grcOcRt4jk6',
-    proficiencyKey: 'thi',
-    requiredRank: 1,
     actionType: 'D',
+    variants: [{ proficiencyKey: 'thi', requiredRank: 1 }],
   },
   {
     slug: 'palm-an-object',
     compendiumId: 'ijZ0DDFpMkWqaShd',
-    proficiencyKey: 'thi',
+    variants: [{ proficiencyKey: 'thi' }],
   },
   {
     slug: 'pick-a-lock',
     compendiumId: '2EE4aF4SZpYf0R6H',
-    proficiencyKey: 'thi',
-    requiredRank: 1,
     actionType: 'D',
     icon: 'ward-domain',
+    variants: [{ proficiencyKey: 'thi', requiredRank: 1 }],
   },
   {
     slug: 'steal',
     compendiumId: 'RDXXE7wMrSPCLv5k',
-    proficiencyKey: 'thi',
+    variants: [{ proficiencyKey: 'thi' }],
   },
   // Feat based
   {
     slug: 'bon-mot',
     compendiumId: '0GF2j54roPFIDmXf',
-    proficiencyKey: 'dip',
     icon: 'hideous-laughter',
+    variants: [{ proficiencyKey: 'dip' }],
   },
 ];
