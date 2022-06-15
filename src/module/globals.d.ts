@@ -46,7 +46,6 @@ interface BaseItemSourcePF2e {
 export class ItemPF2e extends Item {
   slug: string | null;
   toChat(event?: JQuery.TriggeredEvent): Promise<undefined>;
-  calculateMap(): { label: string; map2: number; map3: number };
 }
 
 export type ItemConstructor = new (

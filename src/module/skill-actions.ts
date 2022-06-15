@@ -184,9 +184,8 @@ export class SkillAction {
       this.variants.addBasicVariant(skill, data.extra, data.label);
 
       if (this.hasTrait('attack')) {
-        const map = this.pf2eItem.calculateMap();
-        this.variants.addMapVariant(skill, data.extra, map.map2);
-        this.variants.addMapVariant(skill, data.extra, map.map3);
+        this.variants.addMapVariant(skill, data.extra, -5);
+        this.variants.addMapVariant(skill, data.extra, -10);
       }
 
       if (this.actorHasItem('assurance-' + skill.name)) {
